@@ -22,8 +22,8 @@ namespace ToVPatcher {
 			string hash = CalcMd5( path );
 			if ( hash != md5 ) {
 				throw new PatchingException(
-					"Source file does not appear to be ripped correctly.\n" +
-					"MD5 should be " + md5 + "\n" +
+					"Source file does not appear to be ripped correctly." + Environment.NewLine +
+					"MD5 should be " + md5 + Environment.NewLine +
 					"but is " + hash + "."
 				);
 			}
@@ -74,7 +74,7 @@ namespace ToVPatcher {
 
 		static void PatchGeneric( string originalPath, string patchDir, string outDir, string filename, string patchname, string md5 ) {
 			if ( !File.Exists( originalPath ) ) {
-				throw new PatchingException( "Source file not found!" );
+				throw new PatchingException( "File not found: " + originalPath );
 			}
 			CompareMd5( originalPath, md5 );
 
@@ -92,7 +92,7 @@ namespace ToVPatcher {
 		}
 		public static void PatchScenario( string scenarioPath, string patchDir, string outDir ) {
 			if ( !File.Exists( scenarioPath ) ) {
-				throw new PatchingException( "Source file not found!" );
+				throw new PatchingException( "File not found: " + scenarioPath );
 			}
 			CompareMd5( scenarioPath, "4ef82c6ebc5f1303b07c97aa848db123" );
 
@@ -130,7 +130,7 @@ namespace ToVPatcher {
 		}
 		public static void PatchBtl( string btlPath, string patchDir, string outDir ) {
 			if ( !File.Exists( btlPath ) ) {
-				throw new PatchingException( "Source file not found!" );
+				throw new PatchingException( "File not found: " + btlPath );
 			}
 			CompareMd5( btlPath, "37bed259717dd27e5145d8899e7c36d9" );
 
@@ -178,7 +178,7 @@ namespace ToVPatcher {
 		}
 		public static void PatchChat( string chatPath, string patchDir, string outDir ) {
 			if ( !File.Exists( chatPath ) ) {
-				throw new PatchingException( "Source file not found!" );
+				throw new PatchingException( "File not found: " + chatPath );
 			}
 			CompareMd5( chatPath, "7f0992514818e791ba64a987b6accf88" );
 
@@ -222,7 +222,7 @@ namespace ToVPatcher {
 		}
 		public static void PatchEffect( string effectPath, string patchDir, string outDir ) {
 			if ( !File.Exists( effectPath ) ) {
-				throw new PatchingException( "Source file not found!" );
+				throw new PatchingException( "File not found: " + effectPath );
 			}
 			CompareMd5( effectPath, "ada3bdb2e2ca481b44bc9e209b019dc8" );
 
@@ -280,7 +280,7 @@ namespace ToVPatcher {
 		}
 		public static void PatchChara( string charaPath, string patchDir, string outDir ) {
 			if ( !File.Exists( charaPath ) ) {
-				throw new PatchingException( "Source file not found!" );
+				throw new PatchingException( "File not found: " + charaPath );
 			}
 			CompareMd5( charaPath, "38984a5656b7a2faac3a7e24c962607e" );
 
@@ -454,9 +454,12 @@ namespace ToVPatcher {
 			}
 			Directory.Delete( extractPath, true );
 		}
+		public static void PatchParam( string paramPath, string dummy, string outDir ) {
+			PatchParam( paramPath, outDir );
+		}
 		public static void PatchParam( string paramPath, string outDir ) {
 			if ( !File.Exists( paramPath ) ) {
-				throw new PatchingException( "Source file not found!" );
+				throw new PatchingException( "File not found: " + paramPath );
 			}
 			CompareMd5( paramPath, "d5dd7447f08ae0431e9039f89bed8118" );
 
