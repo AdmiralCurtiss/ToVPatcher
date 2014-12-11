@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+
+namespace ToVPatcher {
+	static class Program {
+		/// <summary>
+		/// The main entry point for the application.
+		/// </summary>
+		[STAThread]
+		static void Main( string[] args ) {
+			if ( args.Contains( "--default" ) ) {
+				Patcher.PatchAllDefault();
+			} else {
+				Application.EnableVisualStyles();
+				Application.SetCompatibleTextRenderingDefault( false );
+				Application.Run( new PatchForm() );
+			}
+		}
+	}
+}

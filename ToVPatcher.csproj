@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{08CD0B14-DD21-43CB-8263-E0086C096642}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ToVPatcher</RootNamespace>
+    <AssemblyName>ToVPatcher</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="PatchForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PatchForm.Designer.cs">
+      <DependentUpon>PatchForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Patcher.cs" />
+    <Compile Include="PatchingException.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tales\tlzc\7zip\Common\CommandLineParser.cs" />
+    <Compile Include="Tales\tlzc\7zip\Common\CRC.cs" />
+    <Compile Include="Tales\tlzc\7zip\Common\InBuffer.cs" />
+    <Compile Include="Tales\tlzc\7zip\Common\OutBuffer.cs" />
+    <Compile Include="Tales\tlzc\7zip\Compress\LZMA\LzmaBase.cs" />
+    <Compile Include="Tales\tlzc\7zip\Compress\LZMA\LzmaDecoder.cs" />
+    <Compile Include="Tales\tlzc\7zip\Compress\LZMA\LzmaEncoder.cs" />
+    <Compile Include="Tales\tlzc\7zip\Compress\LZ\IMatchFinder.cs" />
+    <Compile Include="Tales\tlzc\7zip\Compress\LZ\LzBinTree.cs" />
+    <Compile Include="Tales\tlzc\7zip\Compress\LZ\LzInWindow.cs" />
+    <Compile Include="Tales\tlzc\7zip\Compress\LZ\LzOutWindow.cs" />
+    <Compile Include="Tales\tlzc\7zip\Compress\RangeCoder\RangeCoder.cs" />
+    <Compile Include="Tales\tlzc\7zip\Compress\RangeCoder\RangeCoderBit.cs" />
+    <Compile Include="Tales\tlzc\7zip\Compress\RangeCoder\RangeCoderBitTree.cs" />
+    <Compile Include="Tales\tlzc\7zip\ICoder.cs" />
+    <Compile Include="Tales\tlzc\TLZC.cs" />
+    <Compile Include="Tales\Vesperia\FPS4\FPS4.cs" />
+    <Compile Include="Tales\Vesperia\Scenario\ScenarioDat.cs" />
+    <Compile Include="Util.cs" />
+    <EmbeddedResource Include="PatchForm.resx">
+      <DependentUpon>PatchForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
