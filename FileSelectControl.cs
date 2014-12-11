@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using ToVPatcher.Properties;
 
 namespace ToVPatcher {
 	public partial class FileSelectControl : UserControl {
@@ -25,6 +26,7 @@ namespace ToVPatcher {
 
 		public FileSelectControl() {
 			InitializeComponent();
+			pictureBox1.Hide();
 			Finished = false;
 		}
 
@@ -36,6 +38,22 @@ namespace ToVPatcher {
 				FilePath = dialog.FileName;
 				Finished = false;
 			}
+		}
+
+		public void ShowIconNone() {
+			pictureBox1.Hide();
+		}
+		public void ShowIconSuccess() {
+			pictureBox1.Image = Resources.dialog_clean;
+			pictureBox1.Show();
+		}
+		public void ShowIconError() {
+			pictureBox1.Image = Resources.exclamation;
+			pictureBox1.Show();
+		}
+		public void ShowIconLoading() {
+			pictureBox1.Image = Resources.loading;
+			pictureBox1.Show();
 		}
 	}
 }

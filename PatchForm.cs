@@ -54,6 +54,8 @@ namespace ToVPatcher {
 
 		public delegate void PatchDelegate( string file, string patchDir, string outDir );
 		private void buttonPatch_Click( object sender, EventArgs e ) {
+			buttonPatch.Enabled = false;
+
 			textBoxLog.Clear();
 
 			string outDirPath = @"new/patched";
@@ -68,18 +70,27 @@ namespace ToVPatcher {
 			PatchOneFile( Patcher.PatchChara, fileSelectControlChara, outDir.FullName );
 			PatchOneFile( Patcher.PatchParam, fileSelectControlParam, outDir.FullName );
 			PatchOneFile( Patcher.PatchTrophy, fileSelectControlTrophy, outDir.FullName );
+
+			buttonPatch.Enabled = true;
 		}
 
 		private void PatchOneFile( PatchDelegate func, FileSelectControl ctrl, string outDir ) {
 			try {
 				if ( !ctrl.Finished ) {
+					ctrl.ShowIconLoading();
 					textBoxLog.AppendText( "Patching " + ctrl.LabelText + "..." + Environment.NewLine );
 					func( ctrl.FilePath, ctrl.PatchDir, outDir );
 					textBoxLog.AppendText( "Successfully patched " + ctrl.LabelText + "!" + Environment.NewLine );
 					ctrl.Finished = true;
+					ctrl.ShowIconSuccess();
 				}
 			} catch ( PatchingException ex ) {
+				ctrl.ShowIconError();
 				textBoxLog.AppendText( ex.Message + Environment.NewLine );
+			} catch ( Exception ex ) {
+				ctrl.ShowIconError();
+				textBoxLog.AppendText( "Exception occurred during the patching process: " + Environment.NewLine );
+				textBoxLog.AppendText( ex.ToString() + Environment.NewLine );
 			}
 		}
 	}
