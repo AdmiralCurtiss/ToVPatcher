@@ -474,6 +474,9 @@ namespace ToVPatcher {
 			byte[] engName = Encoding.UTF8.GetBytes( "Tales of Vesperia" );
 			Util.CopyByteArrayPart( engName, 0, p, 0x378, engName.Length );
 
+			// set english name length
+			p[0xA8] = (byte)( engName.Length + 1 );
+
 			System.IO.File.WriteAllBytes( Path.Combine( outDir, "PARAM.SFO" ), p );
 		}
 		public static void PatchTrophy( string trophyTrp, string patchDir, string outDir ) {
