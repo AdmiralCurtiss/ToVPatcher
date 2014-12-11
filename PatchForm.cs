@@ -10,6 +10,8 @@ using System.IO;
 
 namespace ToVPatcher {
 	public partial class PatchForm : Form {
+		List<FileSelectControl> FileSelectControls = new List<FileSelectControl>();
+
 		public PatchForm() {
 			InitializeComponent();
 		}
@@ -18,80 +20,70 @@ namespace ToVPatcher {
 			fileSelectControlString.LabelText = "string.svo";
 			fileSelectControlString.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "string.svo" );
 			fileSelectControlString.PatchDir = "new/patches";
+			fileSelectControlString.PatchFunction = Patcher.PatchString;
+			FileSelectControls.Add( fileSelectControlString ); 
 
 			fileSelectControlScenario.LabelText = "scenario.dat";
 			fileSelectControlScenario.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "scenario.dat" );
 			fileSelectControlScenario.PatchDir = "new/patches/scenario";
+			fileSelectControlScenario.PatchFunction = Patcher.PatchScenario;
+			FileSelectControls.Add( fileSelectControlScenario ); 
 
 			fileSelectControlBtl.LabelText = "btl.svo";
 			fileSelectControlBtl.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "btl.svo" );
 			fileSelectControlBtl.PatchDir = "new/patches/btl";
+			fileSelectControlBtl.PatchFunction = Patcher.PatchBtl;
+			FileSelectControls.Add( fileSelectControlBtl ); 
 
 			fileSelectControlChat.LabelText = "chat.svo";
 			fileSelectControlChat.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "chat.svo" );
 			fileSelectControlChat.PatchDir = "new/patches/chat";
+			fileSelectControlChat.PatchFunction = Patcher.PatchChat;
+			FileSelectControls.Add( fileSelectControlChat ); 
 
 			fileSelectControlUI.LabelText = "UI.svo";
 			fileSelectControlUI.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "UI.svo" );
 			fileSelectControlUI.PatchDir = "new/patches";
+			fileSelectControlUI.PatchFunction = Patcher.PatchUI;
+			FileSelectControls.Add( fileSelectControlUI ); 
 
 			fileSelectControlEffect.LabelText = "effect.svo";
 			fileSelectControlEffect.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "effect.svo" );
 			fileSelectControlEffect.PatchDir = "new/patches/effect";
+			fileSelectControlEffect.PatchFunction = Patcher.PatchEffect;
+			FileSelectControls.Add( fileSelectControlEffect ); 
 
 			fileSelectControlChara.LabelText = "chara.svo";
 			fileSelectControlChara.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "chara.svo" );
 			fileSelectControlChara.PatchDir = "new/patches/chara";
+			fileSelectControlChara.PatchFunction = Patcher.PatchChara;
+			FileSelectControls.Add( fileSelectControlChara ); 
 
 			fileSelectControlParam.LabelText = "PARAM.SFO";
 			fileSelectControlParam.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "PARAM.SFO" );
-			fileSelectControlChara.PatchDir = null;
+			fileSelectControlParam.PatchDir = null;
+			fileSelectControlParam.PatchFunction = Patcher.PatchParam;
+			FileSelectControls.Add( fileSelectControlParam ); 
 
 			fileSelectControlTrophy.LabelText = "TROPHY.TRP";
 			fileSelectControlTrophy.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "TROPHY.TRP" );
 			fileSelectControlTrophy.PatchDir = "new/patches";
+			fileSelectControlTrophy.PatchFunction = Patcher.PatchTrophy;
+			FileSelectControls.Add( fileSelectControlTrophy );
 		}
 
-		public delegate void PatchDelegate( string file, string patchDir, string outDir );
 		private void buttonPatch_Click( object sender, EventArgs e ) {
 			buttonPatch.Enabled = false;
-
-			textBoxLog.Clear();
 
 			string outDirPath = @"new/patched";
 			var outDir = Directory.CreateDirectory( outDirPath );
 
-			PatchOneFile( Patcher.PatchString, fileSelectControlString, outDir.FullName );
-			PatchOneFile( Patcher.PatchScenario, fileSelectControlScenario, outDir.FullName );
-			PatchOneFile( Patcher.PatchBtl, fileSelectControlBtl, outDir.FullName );
-			PatchOneFile( Patcher.PatchChat, fileSelectControlChat, outDir.FullName );
-			PatchOneFile( Patcher.PatchUI, fileSelectControlUI, outDir.FullName );
-			PatchOneFile( Patcher.PatchEffect, fileSelectControlEffect, outDir.FullName );
-			PatchOneFile( Patcher.PatchChara, fileSelectControlChara, outDir.FullName );
-			PatchOneFile( Patcher.PatchParam, fileSelectControlParam, outDir.FullName );
-			PatchOneFile( Patcher.PatchTrophy, fileSelectControlTrophy, outDir.FullName );
+			foreach ( var ctrl in FileSelectControls ) {
+				ctrl.OutDir = outDir.FullName;
+				ctrl.StartWorker();
+			}
 
 			buttonPatch.Enabled = true;
-		}
-
-		private void PatchOneFile( PatchDelegate func, FileSelectControl ctrl, string outDir ) {
-			try {
-				if ( !ctrl.Finished ) {
-					ctrl.ShowIconLoading();
-					textBoxLog.AppendText( "Patching " + ctrl.LabelText + "..." + Environment.NewLine );
-					func( ctrl.FilePath, ctrl.PatchDir, outDir );
-					textBoxLog.AppendText( "Successfully patched " + ctrl.LabelText + "!" + Environment.NewLine );
-					ctrl.Finished = true;
-					ctrl.ShowIconSuccess();
-				}
-			} catch ( PatchingException ex ) {
-				ctrl.ShowIconError();
-				textBoxLog.AppendText( ex.Message + Environment.NewLine );
-			} catch ( Exception ex ) {
-				ctrl.ShowIconError();
-				textBoxLog.AppendText( "Exception occurred during the patching process: " + Environment.NewLine );
-				textBoxLog.AppendText( ex.ToString() + Environment.NewLine );
-			}
 		}
 	}
 }

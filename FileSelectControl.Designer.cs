@@ -27,6 +27,8 @@
 			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.selectFileButton = new System.Windows.Forms.Button();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+			this.labelStatusMessage = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -67,16 +69,31 @@
 			this.pictureBox1.TabIndex = 3;
 			this.pictureBox1.TabStop = false;
 			// 
+			// backgroundWorker
+			// 
+			this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+			this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
+			this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+			// 
+			// labelStatusMessage
+			// 
+			this.labelStatusMessage.AutoSize = true;
+			this.labelStatusMessage.Location = new System.Drawing.Point(0, 29);
+			this.labelStatusMessage.Name = "labelStatusMessage";
+			this.labelStatusMessage.Size = new System.Drawing.Size(0, 13);
+			this.labelStatusMessage.TabIndex = 4;
+			// 
 			// FileSelectControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.labelStatusMessage);
 			this.Controls.Add(this.pictureBox1);
 			this.Controls.Add(this.selectFileButton);
 			this.Controls.Add(this.textBox1);
 			this.Controls.Add(this.nameLabel);
 			this.Name = "FileSelectControl";
-			this.Size = new System.Drawing.Size(573, 28);
+			this.Size = new System.Drawing.Size(573, 48);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -89,5 +106,7 @@
 		private System.Windows.Forms.TextBox textBox1;
 		private System.Windows.Forms.Button selectFileButton;
 		private System.Windows.Forms.PictureBox pictureBox1;
+		private System.ComponentModel.BackgroundWorker backgroundWorker;
+		private System.Windows.Forms.Label labelStatusMessage;
 	}
 }

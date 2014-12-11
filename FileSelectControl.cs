@@ -14,7 +14,7 @@ namespace ToVPatcher {
 			get { return nameLabel.Text; }
 			set { nameLabel.Text = value; }
 		}
-		
+
 		public string FilePath {
 			get { return textBox1.Text; }
 			set { textBox1.Text = value; }
@@ -22,12 +22,13 @@ namespace ToVPatcher {
 
 		public string PatchDir;
 
-		public bool Finished;
+		public bool Successful;
 
 		public FileSelectControl() {
 			InitializeComponent();
 			pictureBox1.Hide();
-			Finished = false;
+			Successful = false;
+			backgroundWorker.WorkerReportsProgress = true;
 		}
 
 		private void selectFileButton_Click( object sender, EventArgs e ) {
@@ -36,7 +37,7 @@ namespace ToVPatcher {
 			var result = dialog.ShowDialog();
 			if ( result == DialogResult.OK ) {
 				FilePath = dialog.FileName;
-				Finished = false;
+				Successful = false;
 			}
 		}
 
@@ -54,6 +55,40 @@ namespace ToVPatcher {
 		public void ShowIconLoading() {
 			pictureBox1.Image = Resources.loading;
 			pictureBox1.Show();
+		}
+
+		public delegate void PatchDelegate( string file, string patchDir, string outDir );
+		public PatchDelegate PatchFunction;
+		public string OutDir;
+
+		public void StartWorker() {
+			if ( !Successful && !backgroundWorker.IsBusy ) {
+				ShowIconLoading();
+				backgroundWorker.RunWorkerAsync();
+			}
+		}
+
+		private void backgroundWorker_DoWork( object sender, DoWorkEventArgs e ) {
+			BackgroundWorker worker = ( (BackgroundWorker)sender );
+			worker.ReportProgress( 0, "Patching " + LabelText + "..." );
+			PatchFunction( FilePath, PatchDir, OutDir );
+			worker.ReportProgress( 100, "Successfully patched " + LabelText + "!" );
+		}
+
+		private void backgroundWorker_ProgressChanged( object sender, ProgressChangedEventArgs e ) {
+			if ( e.UserState != null ) {
+				labelStatusMessage.Text = (string)e.UserState;
+			}
+		}
+
+		private void backgroundWorker_RunWorkerCompleted( object sender, RunWorkerCompletedEventArgs e ) {
+			if ( e.Error != null ) {
+				ShowIconError();
+				labelStatusMessage.Text = "Error: " + e.Error.GetType() + ": " + e.Error.Message;
+			} else {
+				ShowIconSuccess();
+				Successful = true;
+			}
 		}
 	}
 }
