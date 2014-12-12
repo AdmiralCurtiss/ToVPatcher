@@ -74,12 +74,15 @@ namespace ToVPatcher {
 		}
 
 		private delegate void BoolDelegate( bool value );
-		private void SetButtonEnabled( bool value ) {
+		private void SetInteractionEnabled( bool value ) {
 			buttonPatch.Enabled = value;
+			foreach ( var ctrl in FileSelectControls ) {
+				ctrl.SetInteractionEnabled( value );
+			}
 		}
 
 		private void buttonPatch_Click( object sender, EventArgs e ) {
-			buttonPatch.Enabled = false;
+			Invoke( new BoolDelegate( SetInteractionEnabled ), false );
 
 			string outDirPath = @"new/patched";
 			var outDir = Directory.CreateDirectory( outDirPath );
@@ -93,7 +96,7 @@ namespace ToVPatcher {
 					}
 				}
 
-				Invoke( new BoolDelegate( SetButtonEnabled ), true );
+				Invoke( new BoolDelegate( SetInteractionEnabled ), true );
 			} );
 			thread.Start();
 		}

@@ -100,5 +100,10 @@ namespace ToVPatcher {
 				Successful = true;
 			}
 		}
+
+		public void SetInteractionEnabled( bool value ) {
+			selectFileButton.Enabled = value;
+			textBox1.Enabled = value;
+		}
 	}
 }
