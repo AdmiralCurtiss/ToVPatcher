@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Threading;
 
 namespace ToVPatcher {
 	public partial class PatchForm : Form {
@@ -72,18 +73,29 @@ namespace ToVPatcher {
 			FileSelectControls.Add( fileSelectControlTrophy );
 		}
 
+		private delegate void BoolDelegate( bool value );
+		private void SetButtonEnabled( bool value ) {
+			buttonPatch.Enabled = value;
+		}
+
 		private void buttonPatch_Click( object sender, EventArgs e ) {
 			buttonPatch.Enabled = false;
 
 			string outDirPath = @"new/patched";
 			var outDir = Directory.CreateDirectory( outDirPath );
 
-			foreach ( var ctrl in FileSelectControls ) {
-				ctrl.OutDir = outDir.FullName;
-				ctrl.StartWorker();
-			}
+			Thread thread = new Thread( delegate() {
+				foreach ( var ctrl in FileSelectControls ) {
+					ctrl.OutDir = outDir.FullName;
+					ctrl.StartWorker();
+					while ( ctrl.IsWorkerRunning() ) {
+						Thread.Sleep( 300 );
+					}
+				}
 
-			buttonPatch.Enabled = true;
+				Invoke( new BoolDelegate( SetButtonEnabled ), true );
+			} );
+			thread.Start();
 		}
 	}
 }

@@ -63,13 +63,23 @@ namespace ToVPatcher {
 
 		public void StartWorker() {
 			if ( !Successful && !backgroundWorker.IsBusy ) {
-				ShowIconLoading();
 				backgroundWorker.RunWorkerAsync();
 			}
 		}
 
+		public bool IsWorkerRunning() {
+			return backgroundWorker.IsBusy;
+		}
+
+		public delegate void VoidDelegate();
+		public delegate void StringDelegate( string text );
+		private void UpdateStatusMessage( string text ) {
+			labelStatusMessage.Text = text;
+		}
+
 		private void backgroundWorker_DoWork( object sender, DoWorkEventArgs e ) {
 			BackgroundWorker worker = ( (BackgroundWorker)sender );
+			Invoke( new VoidDelegate( ShowIconLoading ) );
 			worker.ReportProgress( 0, "Patching " + LabelText + "..." );
 			PatchFunction( FilePath, PatchDir, OutDir );
 			worker.ReportProgress( 100, "Successfully patched " + LabelText + "!" );
@@ -77,16 +87,16 @@ namespace ToVPatcher {
 
 		private void backgroundWorker_ProgressChanged( object sender, ProgressChangedEventArgs e ) {
 			if ( e.UserState != null ) {
-				labelStatusMessage.Text = (string)e.UserState;
+				Invoke( new StringDelegate( UpdateStatusMessage ), (string)e.UserState );
 			}
 		}
 
 		private void backgroundWorker_RunWorkerCompleted( object sender, RunWorkerCompletedEventArgs e ) {
 			if ( e.Error != null ) {
-				ShowIconError();
-				labelStatusMessage.Text = "Error: " + e.Error.GetType() + ": " + e.Error.Message;
+				Invoke( new VoidDelegate( ShowIconError ) );
+				Invoke( new StringDelegate( UpdateStatusMessage ), "Error: " + e.Error.GetType() + ": " + e.Error.Message );
 			} else {
-				ShowIconSuccess();
+				Invoke( new VoidDelegate( ShowIconSuccess ) );
 				Successful = true;
 			}
 		}
