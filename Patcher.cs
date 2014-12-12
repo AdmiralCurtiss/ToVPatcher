@@ -7,6 +7,7 @@ using System.IO;
 using HyoutaTools;
 using HyoutaTools.Tales.Vesperia.FPS4;
 using HyoutaTools.Tales.tlzc;
+using System.ComponentModel;
 
 namespace ToVPatcher {
 	class Patcher {
@@ -87,23 +88,31 @@ namespace ToVPatcher {
 			);
 		}
 
-		public static void PatchString( string stringSvo, string patchDir, string outDir ) {
+		public static void PatchString( string stringSvo, string patchDir, string outDir, BackgroundWorker worker = null ) {
 			PatchGeneric( stringSvo, patchDir, outDir, "string.svo", "string.svo.xdelta3", "831bf148d6c1e2002a6a94b43cfe8f6c" );
 		}
-		public static void PatchScenario( string scenarioPath, string patchDir, string outDir ) {
+		public static void PatchScenario( string scenarioPath, string patchDir, string outDir, BackgroundWorker worker = null ) {
 			if ( !File.Exists( scenarioPath ) ) {
 				throw new PatchingException( "File not found: " + scenarioPath );
 			}
+			if ( worker != null ) { worker.ReportProgress( 0, "Confirming source file..." ); }
 			CompareMd5( scenarioPath, "4ef82c6ebc5f1303b07c97aa848db123" );
 
 			// extract scenario.dat
+			if ( worker != null ) { worker.ReportProgress( 0, "Extracting source file..." ); }
 			string extractPath = Path.Combine( Path.GetTempPath(), "scenario.dat.extract" );
 			Directory.CreateDirectory( extractPath );
 			var scenario = new HyoutaTools.Tales.Vesperia.Scenario.ScenarioDat( new System.IO.FileStream( scenarioPath, System.IO.FileMode.Open ) );
 			scenario.Extract( extractPath );
 
 			// patch all files
-			foreach ( var f in Directory.GetFiles( extractPath ) ) {
+			int i = 0;
+			var files = Directory.GetFiles( extractPath );
+			foreach ( var f in files ) {
+				if ( worker != null ) {
+					worker.ReportProgress( ( i / files.Length ) * 100, "Patching file " + ( i + 1 ) + " of " + files.Length + "..." );
+				}
+
 				var tempfileDecomp = Path.GetTempFileName();
 				var tempfilePatched = Path.GetTempFileName();
 
@@ -117,9 +126,12 @@ namespace ToVPatcher {
 
 				File.Delete( tempfileDecomp );
 				File.Delete( tempfilePatched );
+
+				++i;
 			}
 
 			// pack it back up
+			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
 			using ( var scenarioNew = new HyoutaTools.Tales.Vesperia.Scenario.ScenarioDat() ) {
 				scenarioNew.Import( extractPath );
 				scenarioNew.Write( Path.Combine( outDir, "scenario.dat" ) );
@@ -128,19 +140,26 @@ namespace ToVPatcher {
 			// clean up
 			Directory.Delete( extractPath, true );
 		}
-		public static void PatchBtl( string btlPath, string patchDir, string outDir ) {
+		public static void PatchBtl( string btlPath, string patchDir, string outDir, BackgroundWorker worker = null ) {
 			if ( !File.Exists( btlPath ) ) {
 				throw new PatchingException( "File not found: " + btlPath );
 			}
+			if ( worker != null ) { worker.ReportProgress( 0, "Confirming source file..." ); }
 			CompareMd5( btlPath, "37bed259717dd27e5145d8899e7c36d9" );
 
 			// extract
+			if ( worker != null ) { worker.ReportProgress( 0, "Extracting source file..." ); }
 			string extractPath = svoExtractToTempDir( btlPath );
 			string btlPackPath = svoExtractToTempDir( Path.Combine( extractPath, "BTL_PACK.DAT" ) );
 			string file3Path = svoExtractToTempDir( Path.Combine( btlPackPath, "0003" ), nometa: true );
 
 			// patch
-			foreach ( string patch in Directory.GetFiles( patchDir ) ) {
+			int i = 0;
+			var files = Directory.GetFiles( patchDir );
+			foreach ( string patch in files ) {
+				if ( worker != null ) {
+					worker.ReportProgress( ( i / files.Length ) * 100, "Patching file " + ( i + 1 ) + " of " + files.Length + "..." );
+				}
 				string fileName = Path.GetFileNameWithoutExtension( patch );
 
 				string sourcePath = Path.Combine( file3Path, "0" + fileName );
@@ -151,9 +170,12 @@ namespace ToVPatcher {
 
 				System.IO.File.Delete( decompressedPath );
 				System.IO.File.Delete( patchedPath );
+
+				++i;
 			}
 
 			// pack
+			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
 			using ( var fps4file3 = new FPS4( Path.Combine( btlPackPath, "0003" ) ) ) {
 				fps4file3.Alignment = 0x80;
 				fps4file3.Pack( file3Path, Path.Combine( btlPackPath, "0003.new" ) );
@@ -176,18 +198,26 @@ namespace ToVPatcher {
 			}
 			Directory.Delete( extractPath, true );
 		}
-		public static void PatchChat( string chatPath, string patchDir, string outDir ) {
+		public static void PatchChat( string chatPath, string patchDir, string outDir, BackgroundWorker worker = null ) {
 			if ( !File.Exists( chatPath ) ) {
 				throw new PatchingException( "File not found: " + chatPath );
 			}
+			if ( worker != null ) { worker.ReportProgress( 0, "Confirming source file..." ); }
 			CompareMd5( chatPath, "7f0992514818e791ba64a987b6accf88" );
 
+			if ( worker != null ) { worker.ReportProgress( 0, "Extracting source file..." ); }
 			string extractPath = svoExtractToTempDir( chatPath );
 			var files = Directory.GetFiles( extractPath );
 
+			int i = 0;
+			int filecount = files.Count( x => Path.GetFileName( x ).StartsWith( "VC" ) && Path.GetFileName( x ).EndsWith( ".DAT" ) );
 			foreach ( string file in files ) {
 				string filename = Path.GetFileName( file );
 				if ( filename.StartsWith( "VC" ) && filename.EndsWith( ".DAT" ) ) {
+					if ( worker != null ) {
+						worker.ReportProgress( ( i / filecount ) * 100, "Patching file " + ( i + 1 ) + " of " + filecount + "..." );
+					}
+
 					string decompPath = tlzcDecompressToTempFile( file );
 					string skitExtractPath = svoExtractToTempDir( decompPath );
 
@@ -208,26 +238,35 @@ namespace ToVPatcher {
 					File.Delete( decompPath );
 					File.Delete( Path.Combine( extractPath, filename + ".new" ) );
 					Directory.Delete( skitExtractPath, true );
+
+					++i;
 				}
 			}
 
+			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
 			using ( var fps4 = new FPS4( chatPath ) ) {
 				fps4.Alignment = 0x800;
 				fps4.Pack( extractPath, Path.Combine( outDir, "chat.svo" ) );
 			}
 			Directory.Delete( extractPath, true );
 		}
-		public static void PatchUI( string ui, string patchDir, string outDir ) {
+		public static void PatchUI( string ui, string patchDir, string outDir, BackgroundWorker worker = null ) {
 			PatchGeneric( ui, patchDir, outDir, "UI.svo", "UI.svo.xdelta3", "9d0a479c838c4811e5df5f6a6815071d" );
 		}
-		public static void PatchEffect( string effectPath, string patchDir, string outDir ) {
+		public static void PatchEffect( string effectPath, string patchDir, string outDir, BackgroundWorker worker = null ) {
 			if ( !File.Exists( effectPath ) ) {
 				throw new PatchingException( "File not found: " + effectPath );
 			}
+			if ( worker != null ) { worker.ReportProgress( 0, "Confirming source file..." ); }
 			CompareMd5( effectPath, "ada3bdb2e2ca481b44bc9e209b019dc8" );
 
 			// extract effect.svo
+			if ( worker != null ) { worker.ReportProgress( 0, "Extracting source file..." ); }
 			string extractPath = svoExtractToTempDir( effectPath );
+
+			if ( worker != null ) {
+				worker.ReportProgress( 0, "Patching files..." );
+			}
 
 			// image assets for SURPRISE ENCOUNTER! and so on
 			string surpriseJpn = tlzcDecompressToTempFile( Path.Combine( extractPath, "E_A023.DAT" ) );
@@ -270,6 +309,7 @@ namespace ToVPatcher {
 			}
 
 			// pack up modified effect.svo
+			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
 			using ( var fps4 = new FPS4( effectPath ) ) {
 				fps4.Alignment = 0x800;
 				fps4.Pack( extractPath, Path.Combine( outDir, "effect.svo" ) );
@@ -278,13 +318,19 @@ namespace ToVPatcher {
 			// clean up
 			System.IO.Directory.Delete( extractPath, true );
 		}
-		public static void PatchChara( string charaPath, string patchDir, string outDir ) {
+		public static void PatchChara( string charaPath, string patchDir, string outDir, BackgroundWorker worker = null ) {
 			if ( !File.Exists( charaPath ) ) {
 				throw new PatchingException( "File not found: " + charaPath );
 			}
+			if ( worker != null ) { worker.ReportProgress( 0, "Confirming source file..." ); }
 			CompareMd5( charaPath, "38984a5656b7a2faac3a7e24c962607e" );
 
+			if ( worker != null ) { worker.ReportProgress( 0, "Extracting source file..." ); }
 			string extractPath = svoExtractToTempDir( charaPath );
+
+			if ( worker != null ) {
+				worker.ReportProgress( 0, "Patching files..." );
+			}
 
 			foreach ( var patchDirG in Directory.GetDirectories( patchDir ) ) {
 				string charaFilePath = Path.Combine( extractPath, Path.GetFileName( patchDirG ) + ".DAT" );
@@ -448,13 +494,14 @@ namespace ToVPatcher {
 				Directory.Delete( POR_Cextract, true );
 			}
 
+			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
 			using ( var fps4 = new FPS4( charaPath ) ) {
 				fps4.Alignment = 0x800;
 				fps4.Pack( extractPath, Path.Combine( outDir, "chara.svo" ) );
 			}
 			Directory.Delete( extractPath, true );
 		}
-		public static void PatchParam( string paramPath, string dummy, string outDir ) {
+		public static void PatchParam( string paramPath, string dummy, string outDir, BackgroundWorker worker = null ) {
 			PatchParam( paramPath, outDir );
 		}
 		public static void PatchParam( string paramPath, string outDir ) {
@@ -479,7 +526,7 @@ namespace ToVPatcher {
 
 			System.IO.File.WriteAllBytes( Path.Combine( outDir, "PARAM.SFO" ), p );
 		}
-		public static void PatchTrophy( string trophyTrp, string patchDir, string outDir ) {
+		public static void PatchTrophy( string trophyTrp, string patchDir, string outDir, BackgroundWorker worker = null ) {
 			PatchGeneric( trophyTrp, patchDir, outDir, "TROPHY.TRP", "TROPHY.TRP.xdelta3", "ccb079c16b72d61b585d72f18d3f3283" );
 		}
 
