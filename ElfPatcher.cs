@@ -13,11 +13,23 @@ namespace ToVPatcher {
 			patchDir = Path.GetFullPath( patchDir );
 			outDir = Path.GetFullPath( outDir );
 
+			if ( !File.Exists( ebootPath ) ) {
+				throw new PatchingException( "File not found: " + ebootPath );
+			}
+			Patcher.CompareMd5( ebootPath, "3171173bba33c43be95e840733ca40a8" );
+
 			// decrypt
 			string elfPath = Path.Combine( Path.GetDirectoryName( ebootModPath ), Path.GetFileName( ebootPath ) + "-mod.ELF" );
-			while ( !File.Exists( elfPath ) ) {
+			int tries = 5;
+			while ( !( File.Exists( elfPath ) && Patcher.CalcMd5( elfPath ) == "a424aa775b707539dbff08cdb2e61ff5" ) ) {
+				if ( --tries < 0 ) {
+					throw new PatchingException( "Could not decrypt EBOOT. Confirm that EBOOT is correctly ripped and ebootMOD is working correctly." );
+				}
+
 				// this is super ugly but the only sensible way since calling unself directly searches the keys who-knows-where
 				RunEbootModAndKill( ebootModPath, "\"" + ebootPath + "\"" );
+				// sleep a bit to reduce chance of ebootMod still having the file handle
+				System.Threading.Thread.Sleep( 250 );
 			}
 
 			// patch the elf
@@ -32,7 +44,9 @@ namespace ToVPatcher {
 		}
 
 		private static void RunEbootMod( string ebootMod, string originalEboot, string modifiedElf, string modifiedEboot ) {
-			Util.RunProgram( ebootMod, "\"" + originalEboot + "\" \"" + modifiedEboot + "\" \"" + modifiedElf + "\"", false, false, true );
+			if ( !Util.RunProgram( ebootMod, "\"" + originalEboot + "\" \"" + modifiedEboot + "\" \"" + modifiedElf + "\"", false, false, true ) ) {
+				throw new PatchingException( "ebootMOD failed: " + originalEboot + " + " + modifiedElf + " -> " + modifiedEboot );
+			}
 		}
 		private static void RunEbootModAndKill( string prog, string args ) {
 			System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
