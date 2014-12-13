@@ -256,8 +256,50 @@ namespace ToVPatcher {
 			}
 			Directory.Delete( extractPath, true );
 		}
-		public static void PatchUI( string ui, string patchDir, string outDir, BackgroundWorker worker = null ) {
-			PatchGeneric( ui, patchDir, outDir, "UI.svo", "UI.svo.xdelta3", "9d0a479c838c4811e5df5f6a6815071d" );
+		public static void PatchUI( string uiPath, string patchDir, string outDir, BackgroundWorker worker = null ) {
+			if ( !File.Exists( uiPath ) ) {
+				throw new PatchingException( "File not found: " + uiPath );
+			}
+			if ( worker != null ) { worker.ReportProgress( 0, "Confirming source file..." ); }
+			CompareMd5( uiPath, "9d0a479c838c4811e5df5f6a6815071d" );
+
+			// extract
+			if ( worker != null ) { worker.ReportProgress( 0, "Extracting source file..." ); }
+			string extractPath = svoExtractToTempDir( uiPath );
+
+			// patch
+			int i = 0;
+			var files = Directory.GetFiles( patchDir );
+			foreach ( string patch in files ) {
+				if ( worker != null ) {
+					worker.ReportProgress( ( i / files.Length ) * 100, "Patching file " + ( i + 1 ) + " of " + files.Length + "..." );
+				}
+				string fileName = Path.GetFileNameWithoutExtension( patch );
+
+				string sourcePath = Path.Combine( extractPath, fileName );
+				string patchedPath = Path.GetTempFileName();
+				XdeltaApply( sourcePath, patchedPath, patch );
+				File.Delete( sourcePath );
+				File.Move( patchedPath, sourcePath );
+
+				++i;
+			}
+
+			// copy unchanged 360 english files over japanese ones
+			File.Copy( Path.Combine( extractPath, "MINIGAMEISHI_E.TXV" ), Path.Combine( extractPath, "MINIGAMEISHI.TXV" ), true );
+			File.Copy( Path.Combine( extractPath, "EVENTMAP_E.TXV" ), Path.Combine( extractPath, "EVENTMAP.TXV" ), true );
+
+			// copy english poker text textures to new PS3 poker deck
+			BlockCopy( Path.Combine( extractPath, "MINIGAMEPOKER_E.TXV" ), 0x0, Path.Combine( extractPath, "MINIGAMEPOKER.TXV" ), 0x0, 0x6AB900 );
+			BlockCopy( Path.Combine( extractPath, "MINIGAMEPOKER_E.TXV" ), 0x14519E0, Path.Combine( extractPath, "MINIGAMEPOKER.TXV" ), 0x14519E0, 0x5E620 );
+
+			// pack
+			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
+			using ( var fps4btl = new FPS4( uiPath ) ) {
+				fps4btl.Alignment = 0x800;
+				fps4btl.Pack( extractPath, Path.Combine( outDir, "UI.svo" ) );
+			}
+			Directory.Delete( extractPath, true );
 		}
 		public static void PatchEffect( string effectPath, string patchDir, string outDir, BackgroundWorker worker = null ) {
 			if ( !File.Exists( effectPath ) ) {
@@ -544,7 +586,7 @@ namespace ToVPatcher {
 			PatchScenario( "scenario.dat", "new/patches/scenario", outDir.FullName );
 			PatchBtl( "btl.svo", "new/patches/btl", outDir.FullName );
 			PatchChat( "chat.svo", "new/patches/chat", outDir.FullName );
-			PatchUI( "UI.svo", "new/patches", outDir.FullName );
+			PatchUI( "UI.svo", "new/patches/UI", outDir.FullName );
 			PatchEffect( "effect.svo", "new/patches/effect", outDir.FullName );
 			PatchChara( "chara.svo", "new/patches/chara", outDir.FullName );
 			PatchParam( "PARAM.SFO", outDir.FullName );

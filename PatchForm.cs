@@ -50,7 +50,7 @@ namespace ToVPatcher {
 
 			fileSelectControlUI.LabelText = "UI.svo";
 			fileSelectControlUI.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "UI.svo" );
-			fileSelectControlUI.PatchDir = "new/patches";
+			fileSelectControlUI.PatchDir = "new/patches/UI";
 			fileSelectControlUI.PatchFunction = Patcher.PatchUI;
 			FileSelectControls.Add( fileSelectControlUI ); 
 
