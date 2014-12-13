@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ElfPatcher.cs" />
     <Compile Include="FileSelectControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

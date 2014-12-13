@@ -30,7 +30,7 @@ namespace ToVPatcher {
 			}
 		}
 
-		static bool XdeltaApply( string original, string patched, string patch ) {
+		public static bool XdeltaApply( string original, string patched, string patch ) {
 			return Util.RunProgram( "xdelta", "-d -f -s \"" + original + "\" \"" + patch + "\" \"" + patched + "\"", false, false, true );
 		}
 
@@ -533,6 +533,7 @@ namespace ToVPatcher {
 		public static void PatchAllDefault() {
 			var outDir = System.IO.Directory.CreateDirectory( "new/patched" );
 
+			ElfPatcher.PatchElf( "EBOOT.BIN", "new/patches", outDir.FullName );
 			PatchString( "string.svo", "new/patches", outDir.FullName );
 			PatchScenario( "scenario.dat", "new/patches/scenario", outDir.FullName );
 			PatchBtl( "btl.svo", "new/patches/btl", outDir.FullName );
