@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using HyoutaTools;
+using System.ComponentModel;
 
 namespace ToVPatcher {
 	class ElfPatcher {
-		public static void PatchElf( string ebootPath, string patchDir, string outDir ) {
+		public static void PatchElf( string ebootPath, string patchDir, string outDir, BackgroundWorker worker = null ) {
 			string ebootModPath = Path.GetFullPath( "ebootmod/ebootMOD.exe" );
 			ebootPath = Path.GetFullPath( ebootPath );
 			patchDir = Path.GetFullPath( patchDir );
@@ -16,9 +17,11 @@ namespace ToVPatcher {
 			if ( !File.Exists( ebootPath ) ) {
 				throw new PatchingException( "File not found: " + ebootPath );
 			}
+			if ( worker != null ) { worker.ReportProgress( 0, "Confirming source file..." ); }
 			Patcher.CompareMd5( ebootPath, "3171173bba33c43be95e840733ca40a8" );
 
 			// decrypt
+			if ( worker != null ) { worker.ReportProgress( 0, "Decrypting..." ); }
 			string elfPath = Path.Combine( Path.GetDirectoryName( ebootModPath ), Path.GetFileName( ebootPath ) + "-mod.ELF" );
 			int tries = 5;
 			while ( !( File.Exists( elfPath ) && Patcher.CalcMd5( elfPath ) == "a424aa775b707539dbff08cdb2e61ff5" ) ) {
@@ -33,10 +36,12 @@ namespace ToVPatcher {
 			}
 
 			// patch the elf
+			if ( worker != null ) { worker.ReportProgress( 0, "Patching..." ); }
 			string patchedElf = Path.GetTempFileName();
 			Patcher.XdeltaApply( elfPath, patchedElf, Path.Combine( patchDir, "ToV.elf.xdelta3" ) );
 
 			// encrypt 
+			if ( worker != null ) { worker.ReportProgress( 0, "Encrypting..." ); }
 			string outPath = Path.Combine( outDir, "EBOOT.BIN" );
 			RunEbootMod( ebootModPath, ebootPath, patchedElf, outPath );
 
@@ -50,7 +55,7 @@ namespace ToVPatcher {
 		}
 		private static void RunEbootModAndKill( string prog, string args ) {
 			System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-			startInfo.CreateNoWindow = false;
+			startInfo.CreateNoWindow = true;
 			startInfo.UseShellExecute = false;
 			startInfo.FileName = prog;
 			startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;

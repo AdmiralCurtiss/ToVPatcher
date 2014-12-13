@@ -18,6 +18,12 @@ namespace ToVPatcher {
 		}
 
 		private void PatchForm_Load( object sender, EventArgs e ) {
+			fileSelectControlElf.LabelText = "EBOOT.BIN";
+			fileSelectControlElf.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "EBOOT.BIN" );
+			fileSelectControlElf.PatchDir = "new/patches";
+			fileSelectControlElf.PatchFunction = ElfPatcher.PatchElf;
+			FileSelectControls.Add( fileSelectControlElf );
+
 			fileSelectControlString.LabelText = "string.svo";
 			fileSelectControlString.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "string.svo" );
 			fileSelectControlString.PatchDir = "new/patches";

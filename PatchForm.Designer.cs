@@ -24,6 +24,7 @@
 		/// </summary>
 		private void InitializeComponent() {
 			this.buttonPatch = new System.Windows.Forms.Button();
+			this.fileSelectControlElf = new ToVPatcher.FileSelectControl();
 			this.fileSelectControlTrophy = new ToVPatcher.FileSelectControl();
 			this.fileSelectControlParam = new ToVPatcher.FileSelectControl();
 			this.fileSelectControlChara = new ToVPatcher.FileSelectControl();
@@ -38,13 +39,24 @@
 			// buttonPatch
 			// 
 			this.buttonPatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonPatch.Location = new System.Drawing.Point(556, 494);
+			this.buttonPatch.Location = new System.Drawing.Point(556, 548);
 			this.buttonPatch.Name = "buttonPatch";
 			this.buttonPatch.Size = new System.Drawing.Size(101, 57);
-			this.buttonPatch.TabIndex = 9;
+			this.buttonPatch.TabIndex = 0;
 			this.buttonPatch.Text = "Patch!";
 			this.buttonPatch.UseVisualStyleBackColor = true;
 			this.buttonPatch.Click += new System.EventHandler(this.buttonPatch_Click);
+			// 
+			// fileSelectControlElf
+			// 
+			this.fileSelectControlElf.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.fileSelectControlElf.FilePath = "";
+			this.fileSelectControlElf.LabelText = "label1";
+			this.fileSelectControlElf.Location = new System.Drawing.Point(13, 13);
+			this.fileSelectControlElf.Name = "fileSelectControlElf";
+			this.fileSelectControlElf.Size = new System.Drawing.Size(644, 48);
+			this.fileSelectControlElf.TabIndex = 1;
 			// 
 			// fileSelectControlTrophy
 			// 
@@ -52,10 +64,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.fileSelectControlTrophy.FilePath = "";
 			this.fileSelectControlTrophy.LabelText = "label1";
-			this.fileSelectControlTrophy.Location = new System.Drawing.Point(13, 445);
+			this.fileSelectControlTrophy.Location = new System.Drawing.Point(13, 499);
 			this.fileSelectControlTrophy.Name = "fileSelectControlTrophy";
 			this.fileSelectControlTrophy.Size = new System.Drawing.Size(644, 48);
-			this.fileSelectControlTrophy.TabIndex = 8;
+			this.fileSelectControlTrophy.TabIndex = 10;
 			// 
 			// fileSelectControlParam
 			// 
@@ -63,10 +75,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.fileSelectControlParam.FilePath = "";
 			this.fileSelectControlParam.LabelText = "label1";
-			this.fileSelectControlParam.Location = new System.Drawing.Point(13, 391);
+			this.fileSelectControlParam.Location = new System.Drawing.Point(13, 445);
 			this.fileSelectControlParam.Name = "fileSelectControlParam";
 			this.fileSelectControlParam.Size = new System.Drawing.Size(644, 48);
-			this.fileSelectControlParam.TabIndex = 7;
+			this.fileSelectControlParam.TabIndex = 9;
 			// 
 			// fileSelectControlChara
 			// 
@@ -74,10 +86,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.fileSelectControlChara.FilePath = "";
 			this.fileSelectControlChara.LabelText = "label1";
-			this.fileSelectControlChara.Location = new System.Drawing.Point(13, 337);
+			this.fileSelectControlChara.Location = new System.Drawing.Point(13, 391);
 			this.fileSelectControlChara.Name = "fileSelectControlChara";
 			this.fileSelectControlChara.Size = new System.Drawing.Size(644, 48);
-			this.fileSelectControlChara.TabIndex = 6;
+			this.fileSelectControlChara.TabIndex = 8;
 			// 
 			// fileSelectControlEffect
 			// 
@@ -85,10 +97,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.fileSelectControlEffect.FilePath = "";
 			this.fileSelectControlEffect.LabelText = "label1";
-			this.fileSelectControlEffect.Location = new System.Drawing.Point(13, 283);
+			this.fileSelectControlEffect.Location = new System.Drawing.Point(13, 337);
 			this.fileSelectControlEffect.Name = "fileSelectControlEffect";
 			this.fileSelectControlEffect.Size = new System.Drawing.Size(644, 48);
-			this.fileSelectControlEffect.TabIndex = 5;
+			this.fileSelectControlEffect.TabIndex = 7;
 			// 
 			// fileSelectControlUI
 			// 
@@ -96,10 +108,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.fileSelectControlUI.FilePath = "";
 			this.fileSelectControlUI.LabelText = "label1";
-			this.fileSelectControlUI.Location = new System.Drawing.Point(13, 229);
+			this.fileSelectControlUI.Location = new System.Drawing.Point(13, 283);
 			this.fileSelectControlUI.Name = "fileSelectControlUI";
 			this.fileSelectControlUI.Size = new System.Drawing.Size(644, 48);
-			this.fileSelectControlUI.TabIndex = 4;
+			this.fileSelectControlUI.TabIndex = 6;
 			// 
 			// fileSelectControlChat
 			// 
@@ -107,10 +119,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.fileSelectControlChat.FilePath = "";
 			this.fileSelectControlChat.LabelText = "label1";
-			this.fileSelectControlChat.Location = new System.Drawing.Point(13, 175);
+			this.fileSelectControlChat.Location = new System.Drawing.Point(13, 229);
 			this.fileSelectControlChat.Name = "fileSelectControlChat";
 			this.fileSelectControlChat.Size = new System.Drawing.Size(644, 48);
-			this.fileSelectControlChat.TabIndex = 3;
+			this.fileSelectControlChat.TabIndex = 5;
 			// 
 			// fileSelectControlBtl
 			// 
@@ -118,10 +130,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.fileSelectControlBtl.FilePath = "";
 			this.fileSelectControlBtl.LabelText = "label1";
-			this.fileSelectControlBtl.Location = new System.Drawing.Point(13, 121);
+			this.fileSelectControlBtl.Location = new System.Drawing.Point(13, 175);
 			this.fileSelectControlBtl.Name = "fileSelectControlBtl";
 			this.fileSelectControlBtl.Size = new System.Drawing.Size(644, 48);
-			this.fileSelectControlBtl.TabIndex = 2;
+			this.fileSelectControlBtl.TabIndex = 4;
 			// 
 			// fileSelectControlScenario
 			// 
@@ -129,10 +141,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.fileSelectControlScenario.FilePath = "";
 			this.fileSelectControlScenario.LabelText = "label1";
-			this.fileSelectControlScenario.Location = new System.Drawing.Point(13, 67);
+			this.fileSelectControlScenario.Location = new System.Drawing.Point(13, 121);
 			this.fileSelectControlScenario.Name = "fileSelectControlScenario";
 			this.fileSelectControlScenario.Size = new System.Drawing.Size(644, 48);
-			this.fileSelectControlScenario.TabIndex = 1;
+			this.fileSelectControlScenario.TabIndex = 3;
 			// 
 			// fileSelectControlString
 			// 
@@ -140,16 +152,17 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.fileSelectControlString.FilePath = "";
 			this.fileSelectControlString.LabelText = "label1";
-			this.fileSelectControlString.Location = new System.Drawing.Point(13, 13);
+			this.fileSelectControlString.Location = new System.Drawing.Point(13, 67);
 			this.fileSelectControlString.Name = "fileSelectControlString";
 			this.fileSelectControlString.Size = new System.Drawing.Size(644, 48);
-			this.fileSelectControlString.TabIndex = 0;
+			this.fileSelectControlString.TabIndex = 2;
 			// 
 			// PatchForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(669, 563);
+			this.ClientSize = new System.Drawing.Size(669, 617);
+			this.Controls.Add(this.fileSelectControlElf);
 			this.Controls.Add(this.buttonPatch);
 			this.Controls.Add(this.fileSelectControlTrophy);
 			this.Controls.Add(this.fileSelectControlParam);
@@ -179,6 +192,7 @@
 		private FileSelectControl fileSelectControlParam;
 		private FileSelectControl fileSelectControlTrophy;
 		private System.Windows.Forms.Button buttonPatch;
+		private FileSelectControl fileSelectControlElf;
 	}
 }
 
