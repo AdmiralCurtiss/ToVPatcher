@@ -11,7 +11,7 @@ using System.ComponentModel;
 
 namespace ToVPatcher {
 	class Patcher {
-		static string CalcMd5( string filename ) {
+		public static string CalcMd5( string filename ) {
 			using ( var md5 = MD5.Create() ) {
 				using ( var stream = File.OpenRead( filename ) ) {
 					byte[] hash = md5.ComputeHash( stream );
@@ -19,7 +19,7 @@ namespace ToVPatcher {
 				}
 			}
 		}
-		static void CompareMd5( string path, string md5 ) {
+		public static void CompareMd5( string path, string md5 ) {
 			string hash = CalcMd5( path );
 			if ( hash != md5 ) {
 				throw new PatchingException(
@@ -30,15 +30,21 @@ namespace ToVPatcher {
 			}
 		}
 
-		public static bool XdeltaApply( string original, string patched, string patch ) {
-			return Util.RunProgram( "xdelta", "-d -f -s \"" + original + "\" \"" + patch + "\" \"" + patched + "\"", false, false, true );
+		public static void XdeltaApply( string original, string patched, string patch ) {
+			if ( !Util.RunProgram( "xdelta", "-d -f -s \"" + original + "\" \"" + patch + "\" \"" + patched + "\"", false, false, true ) ) {
+				throw new PatchingException( "Patching failed: " + patch );
+			}
 		}
 
-		static bool ComptoeDecompress( string infile, string outfile ) {
-			return Util.RunProgram( "comptoe", "-d \"" + infile + "\" \"" + outfile + "\"", false, false, true );
+		static void ComptoeDecompress( string infile, string outfile ) {
+			if ( !Util.RunProgram( "comptoe", "-d \"" + infile + "\" \"" + outfile + "\"", false, false, true ) ) {
+				throw new PatchingException( "Decompression failed: " + infile );
+			}
 		}
-		static bool ComptoeCompress( string infile, string outfile ) {
-			return Util.RunProgram( "comptoe", "-c1 \"" + infile + "\" \"" + outfile + "\"", false, false, true );
+		static void ComptoeCompress( string infile, string outfile ) {
+			if ( !Util.RunProgram( "comptoe", "-c1 \"" + infile + "\" \"" + outfile + "\"", false, false, true ) ) {
+				throw new PatchingException( "Compression failed: " + infile );
+			}
 		}
 
 		static void tlzcDecompress( string infile, string outfile ) {
