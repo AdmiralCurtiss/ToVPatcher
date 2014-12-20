@@ -12,6 +12,7 @@ using System.Threading;
 namespace ToVPatcher {
 	public partial class PatchForm : Form {
 		List<FileSelectControl> FileSelectControls = new List<FileSelectControl>();
+		bool IsInteractionEnabled = true;
 
 		public PatchForm() {
 			InitializeComponent();
@@ -85,6 +86,7 @@ namespace ToVPatcher {
 			foreach ( var ctrl in FileSelectControls ) {
 				ctrl.SetInteractionEnabled( value );
 			}
+			IsInteractionEnabled = value;
 		}
 
 		private void buttonPatch_Click( object sender, EventArgs e ) {
@@ -105,6 +107,16 @@ namespace ToVPatcher {
 				Invoke( new BoolDelegate( SetInteractionEnabled ), true );
 			} );
 			thread.Start();
+		}
+
+		protected override void OnFormClosing( FormClosingEventArgs e ) {
+			base.OnFormClosing( e );
+			if ( e.CloseReason == CloseReason.WindowsShutDown ) return;
+
+			if ( !IsInteractionEnabled ) {
+				MessageBox.Show( this, "Please wait until the patching has completed." );
+				e.Cancel = true;
+			}
 		}
 	}
 }
