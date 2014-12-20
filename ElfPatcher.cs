@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 namespace ToVPatcher {
 	class ElfPatcher {
-		public static void PatchElf( string ebootPath, string patchDir, string outDir, BackgroundWorker worker = null ) {
+		public static void PatchElf( string ebootPath, string patchDir, string outDir, string outMd5 = null, BackgroundWorker worker = null ) {
 			string ebootModPath = Path.GetFullPath( "ebootmod/ebootMOD.exe" );
 			ebootPath = Path.GetFullPath( ebootPath );
 			patchDir = Path.GetFullPath( patchDir );
@@ -39,6 +39,8 @@ namespace ToVPatcher {
 			if ( worker != null ) { worker.ReportProgress( 0, "Patching..." ); }
 			string patchedElf = Path.GetTempFileName();
 			Patcher.XdeltaApply( elfPath, patchedElf, Path.Combine( patchDir, "ToV.elf.xdelta3" ) );
+
+			if ( outMd5 != null ) { Patcher.CompareMd5Output( patchedElf, outMd5 ); }
 
 			// encrypt 
 			if ( worker != null ) { worker.ReportProgress( 0, "Encrypting..." ); }

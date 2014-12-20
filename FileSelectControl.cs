@@ -21,6 +21,7 @@ namespace ToVPatcher {
 		}
 
 		public string PatchDir;
+		public string OutputChecksum = null;
 
 		public bool Successful;
 
@@ -58,7 +59,7 @@ namespace ToVPatcher {
 			pictureBox1.Show();
 		}
 
-		public delegate void PatchDelegate( string file, string patchDir, string outDir, BackgroundWorker worker = null );
+		public delegate void PatchDelegate( string file, string patchDir, string outDir, string outMd5 = null, BackgroundWorker worker = null );
 		public PatchDelegate PatchFunction;
 		public string OutDir;
 
@@ -82,7 +83,7 @@ namespace ToVPatcher {
 			BackgroundWorker worker = ( (BackgroundWorker)sender );
 			Invoke( new VoidDelegate( ShowIconLoading ) );
 			worker.ReportProgress( 0, "Patching " + LabelText + "..." );
-			PatchFunction( FilePath, PatchDir, OutDir, worker );
+			PatchFunction( FilePath, PatchDir, OutDir, OutputChecksum, worker );
 			worker.ReportProgress( 100, "Successfully patched " + LabelText + "!" );
 		}
 

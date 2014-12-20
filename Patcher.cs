@@ -23,9 +23,17 @@ namespace ToVPatcher {
 			string hash = CalcMd5( path );
 			if ( hash != md5 ) {
 				throw new PatchingException(
-					"Source file does not appear to be ripped correctly." + Environment.NewLine +
-					"MD5 should be " + md5 + Environment.NewLine +
-					"but is " + hash + "."
+					"Source file does not appear to be ripped correctly. " +
+					"MD5 should be " + md5 + " but is " + hash + "."
+				);
+			}
+		}
+		public static void CompareMd5Output( string path, string md5 ) {
+			string hash = CalcMd5( path );
+			if ( hash != md5 ) {
+				throw new PatchingException(
+					"File did not patch correctly. " +
+					"New MD5 should be " + md5 + " but is " + hash + "."
 				);
 			}
 		}
@@ -79,7 +87,7 @@ namespace ToVPatcher {
 			System.IO.File.WriteAllBytes( pathTo, fileTo );
 		}
 
-		static void PatchGeneric( string originalPath, string patchDir, string outDir, string filename, string patchname, string md5 ) {
+		static void PatchGeneric( string originalPath, string patchDir, string outDir, string filename, string patchname, string md5, string outMd5 = null ) {
 			if ( !File.Exists( originalPath ) ) {
 				throw new PatchingException( "File not found: " + originalPath );
 			}
@@ -87,17 +95,20 @@ namespace ToVPatcher {
 
 			// then patch!
 			System.IO.Directory.CreateDirectory( outDir );
+			string outPath = Path.Combine( outDir, filename );
 			XdeltaApply(
 				originalPath,
-				Path.Combine( outDir, filename ),
+				outPath,
 				Path.Combine( patchDir, patchname )
 			);
+
+			if ( outMd5 != null ) { CompareMd5Output( outPath, outMd5 ); }
 		}
 
-		public static void PatchString( string stringSvo, string patchDir, string outDir, BackgroundWorker worker = null ) {
-			PatchGeneric( stringSvo, patchDir, outDir, "string.svo", "string.svo.xdelta3", "831bf148d6c1e2002a6a94b43cfe8f6c" );
+		public static void PatchString( string stringSvo, string patchDir, string outDir, string outMd5 = null, BackgroundWorker worker = null ) {
+			PatchGeneric( stringSvo, patchDir, outDir, "string.svo", "string.svo.xdelta3", "831bf148d6c1e2002a6a94b43cfe8f6c", outMd5 );
 		}
-		public static void PatchScenario( string scenarioPath, string patchDir, string outDir, BackgroundWorker worker = null ) {
+		public static void PatchScenario( string scenarioPath, string patchDir, string outDir, string outMd5 = null, BackgroundWorker worker = null ) {
 			if ( !File.Exists( scenarioPath ) ) {
 				throw new PatchingException( "File not found: " + scenarioPath );
 			}
@@ -138,15 +149,18 @@ namespace ToVPatcher {
 
 			// pack it back up
 			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
+			string outPath = Path.Combine( outDir, "scenario.dat" );
 			using ( var scenarioNew = new HyoutaTools.Tales.Vesperia.Scenario.ScenarioDat() ) {
 				scenarioNew.Import( extractPath );
-				scenarioNew.Write( Path.Combine( outDir, "scenario.dat" ) );
+				scenarioNew.Write( outPath );
 			}
 
 			// clean up
 			Directory.Delete( extractPath, true );
+
+			if ( outMd5 != null ) { CompareMd5Output( outPath, outMd5 ); }
 		}
-		public static void PatchBtl( string btlPath, string patchDir, string outDir, BackgroundWorker worker = null ) {
+		public static void PatchBtl( string btlPath, string patchDir, string outDir, string outMd5 = null, BackgroundWorker worker = null ) {
 			if ( !File.Exists( btlPath ) ) {
 				throw new PatchingException( "File not found: " + btlPath );
 			}
@@ -198,13 +212,16 @@ namespace ToVPatcher {
 			File.Move( Path.Combine( extractPath, "BTL_PACK.DAT.new" ), Path.Combine( extractPath, "BTL_PACK.DAT" ) );
 			Directory.Delete( btlPackPath, true );
 
+			string outPath = Path.Combine( outDir, "btl.svo" );
 			using ( var fps4btl = new FPS4( btlPath ) ) {
 				fps4btl.Alignment = 0x800;
-				fps4btl.Pack( extractPath, Path.Combine( outDir, "btl.svo" ) );
+				fps4btl.Pack( extractPath, outPath );
 			}
 			Directory.Delete( extractPath, true );
+
+			if ( outMd5 != null ) { CompareMd5Output( outPath, outMd5 ); }
 		}
-		public static void PatchChat( string chatPath, string patchDir, string outDir, BackgroundWorker worker = null ) {
+		public static void PatchChat( string chatPath, string patchDir, string outDir, string outMd5 = null, BackgroundWorker worker = null ) {
 			if ( !File.Exists( chatPath ) ) {
 				throw new PatchingException( "File not found: " + chatPath );
 			}
@@ -250,13 +267,16 @@ namespace ToVPatcher {
 			}
 
 			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
+			string outPath = Path.Combine( outDir, "chat.svo" );
 			using ( var fps4 = new FPS4( chatPath ) ) {
 				fps4.Alignment = 0x800;
-				fps4.Pack( extractPath, Path.Combine( outDir, "chat.svo" ) );
+				fps4.Pack( extractPath, outPath );
 			}
 			Directory.Delete( extractPath, true );
+
+			if ( outMd5 != null ) { CompareMd5Output( outPath, outMd5 ); }
 		}
-		public static void PatchUI( string uiPath, string patchDir, string outDir, BackgroundWorker worker = null ) {
+		public static void PatchUI( string uiPath, string patchDir, string outDir, string outMd5 = null, BackgroundWorker worker = null ) {
 			if ( !File.Exists( uiPath ) ) {
 				throw new PatchingException( "File not found: " + uiPath );
 			}
@@ -295,13 +315,16 @@ namespace ToVPatcher {
 
 			// pack
 			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
+			string outPath = Path.Combine( outDir, "UI.svo" );
 			using ( var fps4btl = new FPS4( uiPath ) ) {
 				fps4btl.Alignment = 0x800;
-				fps4btl.Pack( extractPath, Path.Combine( outDir, "UI.svo" ) );
+				fps4btl.Pack( extractPath, outPath );
 			}
 			Directory.Delete( extractPath, true );
+
+			if ( outMd5 != null ) { CompareMd5Output( outPath, outMd5 ); }
 		}
-		public static void PatchEffect( string effectPath, string patchDir, string outDir, BackgroundWorker worker = null ) {
+		public static void PatchEffect( string effectPath, string patchDir, string outDir, string outMd5 = null, BackgroundWorker worker = null ) {
 			if ( !File.Exists( effectPath ) ) {
 				throw new PatchingException( "File not found: " + effectPath );
 			}
@@ -358,15 +381,18 @@ namespace ToVPatcher {
 
 			// pack up modified effect.svo
 			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
+			string outPath = Path.Combine( outDir, "effect.svo" );
 			using ( var fps4 = new FPS4( effectPath ) ) {
 				fps4.Alignment = 0x800;
-				fps4.Pack( extractPath, Path.Combine( outDir, "effect.svo" ) );
+				fps4.Pack( extractPath, outPath );
 			}
 
 			// clean up
 			System.IO.Directory.Delete( extractPath, true );
+
+			if ( outMd5 != null ) { CompareMd5Output( outPath, outMd5 ); }
 		}
-		public static void PatchChara( string charaPath, string patchDir, string outDir, BackgroundWorker worker = null ) {
+		public static void PatchChara( string charaPath, string patchDir, string outDir, string outMd5 = null, BackgroundWorker worker = null ) {
 			if ( !File.Exists( charaPath ) ) {
 				throw new PatchingException( "File not found: " + charaPath );
 			}
@@ -543,16 +569,19 @@ namespace ToVPatcher {
 			}
 
 			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
+			string outPath = Path.Combine( outDir, "chara.svo" );
 			using ( var fps4 = new FPS4( charaPath ) ) {
 				fps4.Alignment = 0x800;
-				fps4.Pack( extractPath, Path.Combine( outDir, "chara.svo" ) );
+				fps4.Pack( extractPath, outPath );
 			}
 			Directory.Delete( extractPath, true );
+
+			if ( outMd5 != null ) { CompareMd5Output( outPath, outMd5 ); }
 		}
-		public static void PatchParam( string paramPath, string dummy, string outDir, BackgroundWorker worker = null ) {
-			PatchParam( paramPath, outDir );
+		public static void PatchParam( string paramPath, string dummy, string outDir, string outMd5 = null, BackgroundWorker worker = null ) {
+			PatchParam( paramPath, outDir, outMd5 );
 		}
-		public static void PatchParam( string paramPath, string outDir ) {
+		public static void PatchParam( string paramPath, string outDir, string outMd5 = null ) {
 			if ( !File.Exists( paramPath ) ) {
 				throw new PatchingException( "File not found: " + paramPath );
 			}
@@ -572,10 +601,13 @@ namespace ToVPatcher {
 			// set english name length
 			p[0xA8] = (byte)( engName.Length + 1 );
 
-			System.IO.File.WriteAllBytes( Path.Combine( outDir, "PARAM.SFO" ), p );
+			string outPath = Path.Combine( outDir, "PARAM.SFO" );
+			System.IO.File.WriteAllBytes( outPath, p );
+
+			if ( outMd5 != null ) { CompareMd5Output( outPath, outMd5 ); }
 		}
-		public static void PatchTrophy( string trophyTrp, string patchDir, string outDir, BackgroundWorker worker = null ) {
-			PatchGeneric( trophyTrp, patchDir, outDir, "TROPHY.TRP", "TROPHY.TRP.xdelta3", "ccb079c16b72d61b585d72f18d3f3283" );
+		public static void PatchTrophy( string trophyTrp, string patchDir, string outDir, string outMd5 = null, BackgroundWorker worker = null ) {
+			PatchGeneric( trophyTrp, patchDir, outDir, "TROPHY.TRP", "TROPHY.TRP.xdelta3", "ccb079c16b72d61b585d72f18d3f3283", outMd5 );
 		}
 
 		public static void PatchAllDefault() {
