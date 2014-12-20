@@ -38,6 +38,7 @@ namespace ToVPatcher {
 			if ( result == DialogResult.OK ) {
 				FilePath = dialog.FileName;
 				Successful = false;
+				ShowIconNone();
 			}
 		}
 
