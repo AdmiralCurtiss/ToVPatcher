@@ -39,19 +39,31 @@ namespace ToVPatcher {
 		}
 
 		public static void XdeltaApply( string original, string patched, string patch ) {
-			if ( !Util.RunProgram( "xdelta", "-d -f -s \"" + original + "\" \"" + patch + "\" \"" + patched + "\"", false, false, true ) ) {
-				throw new PatchingException( "Patching failed: " + patch );
+			try {
+				if ( !Util.RunProgram( "xdelta", "-d -f -s \"" + original + "\" \"" + patch + "\" \"" + patched + "\"", false, false, true ) ) {
+					throw new PatchingException( "Patching failed: " + patch );
+				}
+			} catch ( Win32Exception e ) {
+				throw new PatchingException( "Failed during execution of xdelta. Make sure xdelta can be found at " + Path.GetFullPath( "xdelta.exe" ) + " and try again." );
 			}
 		}
 
 		static void ComptoeDecompress( string infile, string outfile ) {
-			if ( !Util.RunProgram( "comptoe", "-d \"" + infile + "\" \"" + outfile + "\"", false, false, true ) ) {
-				throw new PatchingException( "Decompression failed: " + infile );
+			try {
+				if ( !Util.RunProgram( "comptoe", "-d \"" + infile + "\" \"" + outfile + "\"", false, false, true ) ) {
+					throw new PatchingException( "Decompression failed: " + infile );
+				}
+			} catch ( Win32Exception e ) {
+				throw new PatchingException( "Failed during execution of comptoe. Make sure comptoe can be found at " + Path.GetFullPath( "comptoe.exe" ) + " and try again." );
 			}
 		}
 		static void ComptoeCompress( string infile, string outfile ) {
-			if ( !Util.RunProgram( "comptoe", "-c1 \"" + infile + "\" \"" + outfile + "\"", false, false, true ) ) {
-				throw new PatchingException( "Compression failed: " + infile );
+			try {
+				if ( !Util.RunProgram( "comptoe", "-c1 \"" + infile + "\" \"" + outfile + "\"", false, false, true ) ) {
+					throw new PatchingException( "Compression failed: " + infile );
+				}
+			} catch ( Win32Exception e ) {
+				throw new PatchingException( "Failed during execution of comptoe. Make sure comptoe can be found at " + Path.GetFullPath( "comptoe.exe" ) + " and try again." );
 			}
 		}
 

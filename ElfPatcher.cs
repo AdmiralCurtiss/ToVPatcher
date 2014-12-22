@@ -30,7 +30,11 @@ namespace ToVPatcher {
 				}
 
 				// this is super ugly but the only sensible way since calling unself directly searches the keys who-knows-where
-				RunEbootModAndKill( ebootModPath, "\"" + ebootPath + "\"" );
+				try {
+					RunEbootModAndKill( ebootModPath, "\"" + ebootPath + "\"" );
+				} catch ( Win32Exception e ) {
+					throw new PatchingException( "Failed during execution of ebootMOD. Make sure ebootMOD can be found at " + ebootModPath + " and try again." );
+				}
 				// sleep a bit to reduce chance of ebootMod still having the file handle
 				System.Threading.Thread.Sleep( 250 );
 			}
@@ -51,8 +55,12 @@ namespace ToVPatcher {
 		}
 
 		private static void RunEbootMod( string ebootMod, string originalEboot, string modifiedElf, string modifiedEboot ) {
-			if ( !Util.RunProgram( ebootMod, "\"" + originalEboot + "\" \"" + modifiedEboot + "\" \"" + modifiedElf + "\"", false, false, true ) ) {
-				throw new PatchingException( "ebootMOD failed: " + originalEboot + " + " + modifiedElf + " -> " + modifiedEboot );
+			try {
+				if ( !Util.RunProgram( ebootMod, "\"" + originalEboot + "\" \"" + modifiedEboot + "\" \"" + modifiedElf + "\"", false, false, true ) ) {
+					throw new PatchingException( "ebootMOD failed: " + originalEboot + " + " + modifiedElf + " -> " + modifiedEboot );
+				}
+			} catch ( Win32Exception e ) {
+				throw new PatchingException( "Failed during execution of ebootMOD. Make sure ebootMOD can be found at " + ebootMod + " and try again." );
 			}
 		}
 		private static void RunEbootModAndKill( string prog, string args ) {
