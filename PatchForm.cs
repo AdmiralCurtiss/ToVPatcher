@@ -21,6 +21,16 @@ namespace ToVPatcher {
 		}
 
 		private void PatchForm_Load( object sender, EventArgs e ) {
+			if ( !Directory.Exists( "new/patches" ) ) {
+				MessageBox.Show( this,
+					"Patch folder could not be found at " + Path.GetFullPath( "new/patches" ) + "." + Environment.NewLine +
+					"Please make sure the archive containing the patch files was fully extracted and no files were moved or renamed, then run the patcher again.",
+					"Patches not found!", MessageBoxButtons.OK, MessageBoxIcon.Error
+				);
+				Close();
+				return;
+			}
+
 			LoadOutputChecksums();
 
 			fileSelectControlElf.LabelText = "EBOOT.BIN";
@@ -105,7 +115,7 @@ namespace ToVPatcher {
 			} else {
 				MessageBox.Show( this,
 					"File containing checksums for the patched files could not be found." + Environment.NewLine +
-					"Please make sure the archive containing the patch was fully extracted and no files were moved or renamed." + Environment.NewLine +
+					"Please make sure the archive containing the patch files was fully extracted and no files were moved or renamed." + Environment.NewLine +
 					"The patcher will still run, but protection against incorrect patches will not be provided.",
 					"Checksums not found!", MessageBoxButtons.OK, MessageBoxIcon.Warning
 				);
