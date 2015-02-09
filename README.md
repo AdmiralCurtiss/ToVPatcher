@@ -8,6 +8,18 @@ ToVPatcher is a tool to automate the patching process of the Tales of Vesperia (
 ToVPatcher requires the .NET Framework 3.5. Please make sure it's installed if you run into issues.
 
 
+DISCLAIMER
+==========
+
+Usage of this patch requires a PS3 console that can run unsigned software, also known as homebrew.
+
+We cannot take responsibility for anything you may choose to do or install in the process of acquiring homebrew functionality for your PS3. Please do not try to modify your PS3 unless you are fully aware of and understand the consequences and possible risks.
+
+As of the release of this patch, there is **no known software exploit to run homebrew on or downgrade a console that has been updated past firmware version 3.55**. **Do not attempt to downgrade consoles on higher firmware versions!**
+
+If you are not confident, please use the online script reference instead.
+
+
 Requirements
 ============
 
