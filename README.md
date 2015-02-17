@@ -39,9 +39,7 @@ Instructions
   
 * Get your Tales of Vesperia (PS3) game files
   
-  This is most easily done by inserting the game disc into a PS3 that can run homebrew, then either copying them to an USB storage medium or transferring them over the local network with an FTP tool.
-  
-  Keep in mind that we will later run a modified version of Tales of Vesperia using your preferred backup loader, so feel free to prepare an unpatched version on your PS3's HDD in the meantime, so that we can later just replace the files that had to be changed.
+  This is most easily done by inserting the game disc into a PS3 that can run homebrew, then either copying them to an USB storage medium with a file manager or transferring them over the local network with an FTP tool.
   
   
 * Copy the files to patch to ToVPatcher's folder
@@ -57,8 +55,8 @@ Instructions
   - chara.svo
   
   Optionally you can also patch:
-  - PARAM.SFO
-  - TROPHY.TRP (*SEE NOTE AT THE BOTTOM OF THIS FILE!*)
+  - PARAM.SFO (Translates the game's name in the XMB.)
+  - TROPHY.TRP (*IMPORTANT: WILL NOT WORK AS INTENDED! SEE NOTE AT THE BOTTOM OF THIS FILE!*)
   
   Copy all of them next to ToVPatcher.exe
   
@@ -78,16 +76,28 @@ Instructions
   Before you proceed to the next step, please make sure all files were patched correctly, as indicated by the green checkmarks next to each file in ToVPatcher.
   
   
-* Copy the patched files to your PS3
+* Overwrite the original files with the patched ones
   
   Once ToVPatcher is done, you can find the patched files in ./new/patched/
-  Copy them back to your dumped copy of Tales of Vesperia, overwriting the originals, again via FTP or USB depending on what you prefer.
+  Copy them back to your dumped copy of Tales of Vesperia, overwriting the originals.
+  
+  
+* Copy the patched game to your PS3
+  
+  Similarly to what we did before to acquire the game files from the game disc, you can now copy the modified files back to the PS3 via FTP or USB. Place them so that your preferred backup loader can find and recognize them.
   
   
 * Run Tales of Vesperia!
   
-  And that's it! You should now be able to boot a patched, English version of Tales of Vesperia using your preferred backup loader.
-  
+  And that's it! You should now be able to boot a patched, English version of Tales of Vesperia!
+
+
+Installed Data
+==============
+
+Please note that the Install option on the title screen does not work properly with this patch. Please delete any existing Installed Game Data for Tales of Vesperia, shown as テイルズ オブ ヴェスペリア （インストールデータ） with a size of 3441 MB in the Game Data Utility section of the XMB. Other installed data such as DLC costumes or skits should be compatible, but will not be translated.
+
+There are no known save file incompatibilities. Saves created with the original Japanese version can be loaded with the patch and vice-versa.
 
 
 A Note on TROPHY.TRP
