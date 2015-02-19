@@ -20,6 +20,18 @@ namespace ToVPatcher {
 			InitializeComponent();
 		}
 
+		bool CheckForExecutable( string file ) {
+			if ( !File.Exists( file ) && !File.Exists( file + ".exe" ) ) {
+				MessageBox.Show( this,
+					file + " could not be found at " + Path.GetFullPath( file + ".exe" ) + "." + Environment.NewLine +
+					"Please make sure the archive containing ToVPatcher was fully extracted and no files were moved or renamed, then run the patcher again.",
+					file + " found!", MessageBoxButtons.OK, MessageBoxIcon.Error
+				);
+				return false;
+			}
+			return true;
+		}
+
 		private void PatchForm_Load( object sender, EventArgs e ) {
 			if ( !Directory.Exists( "new/patches" ) ) {
 				MessageBox.Show( this,
@@ -29,6 +41,21 @@ namespace ToVPatcher {
 				);
 				Close();
 				return;
+			}
+
+			if ( !CheckForExecutable( "comptoe" ) || !CheckForExecutable( "xdelta" ) ) {
+				Close();
+				return;
+			}
+
+			string ebootModPath = Path.GetFullPath( "ebootmod/ebootMOD.exe" );
+			if ( !File.Exists( ebootModPath ) ) {
+				MessageBox.Show( this,
+					"ebootMOD could not be found at " + ebootModPath + "." + Environment.NewLine +
+					"ebootMOD is required to patch EBOOT.BIN. Please read the readme, find a copy of ebootMOD, and place it at the appropriate location." + Environment.NewLine +
+					"The patcher will still run, but will not be able to patch EBOOT.BIN until you do so.",
+					"ebootMOD not found!", MessageBoxButtons.OK, MessageBoxIcon.Warning
+				);
 			}
 
 			LoadOutputChecksums();
