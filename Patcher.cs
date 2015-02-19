@@ -85,6 +85,9 @@ namespace ToVPatcher {
 
 		static string svoExtractToTempDir( string infile, bool nometa = false ) {
 			string extractPath = Path.Combine( Path.GetTempPath(), Path.GetFileName( infile ) + ".extract" );
+			if ( Directory.Exists( extractPath ) ) {
+				Directory.Delete( extractPath, true );
+			}
 			Directory.CreateDirectory( extractPath );
 			using ( var fps4 = new FPS4( infile ) ) {
 				fps4.Extract( extractPath, nometa );
@@ -130,6 +133,9 @@ namespace ToVPatcher {
 			// extract scenario.dat
 			if ( worker != null ) { worker.ReportProgress( 0, "Extracting source file..." ); }
 			string extractPath = Path.Combine( Path.GetTempPath(), "scenario.dat.extract" );
+			if ( Directory.Exists( extractPath ) ) {
+				Directory.Delete( extractPath, true );
+			}
 			Directory.CreateDirectory( extractPath );
 			var scenario = new HyoutaTools.Tales.Vesperia.Scenario.ScenarioDat( new System.IO.FileStream( scenarioPath, System.IO.FileMode.Open ) );
 			scenario.Extract( extractPath );
