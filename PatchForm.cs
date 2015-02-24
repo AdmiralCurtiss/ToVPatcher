@@ -17,6 +17,7 @@ namespace ToVPatcher {
 		bool IsInteractionEnabled = true;
 
 		public PatchForm() {
+			this.Icon = Properties.Resources.icon;
 			InitializeComponent();
 		}
 
