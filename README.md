@@ -29,6 +29,16 @@ To run this patched version of Tales of Vesperia, you will need:
 * A Windows PC to run the patching tool
 
 
+Installed Data
+==============
+
+Please note that the Install option on the title screen does not work properly with this patch. Please delete any existing Installed Game Data for Tales of Vesperia, shown as テイルズ オブ ヴェスペリア （インストールデータ） with a size of 3441 MB in the Game Data Utility section of the XMB.
+
+Other installed data such as DLC costumes or skits should be compatible, but will not be translated.
+
+There are no known save file incompatibilities. Saves created with the original Japanese version can be loaded with the patch and vice-versa.
+
+
 Instructions
 ============
 
@@ -90,14 +100,6 @@ Instructions
 * Run Tales of Vesperia!
   
   And that's it! You should now be able to boot a patched, English version of Tales of Vesperia!
-
-
-Installed Data
-==============
-
-Please note that the Install option on the title screen does not work properly with this patch. Please delete any existing Installed Game Data for Tales of Vesperia, shown as テイルズ オブ ヴェスペリア （インストールデータ） with a size of 3441 MB in the Game Data Utility section of the XMB. Other installed data such as DLC costumes or skits should be compatible, but will not be translated.
-
-There are no known save file incompatibilities. Saves created with the original Japanese version can be loaded with the patch and vice-versa.
 
 
 Credits & Thanks
