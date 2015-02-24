@@ -106,11 +106,13 @@ namespace ToVPatcher {
 			if ( !File.Exists( originalPath ) ) {
 				throw new PatchingException( "File not found: " + originalPath );
 			}
+			// if patched file exists and matches, exit early
+			string outPath = Path.Combine( outDir, filename );
+			try { CompareMd5Output( outPath, outMd5 ); return; } catch ( PatchingException ) { } catch ( FileNotFoundException ) { }
 			CompareMd5( originalPath, md5 );
 
 			// then patch!
 			System.IO.Directory.CreateDirectory( outDir );
-			string outPath = Path.Combine( outDir, filename );
 			XdeltaApply(
 				originalPath,
 				outPath,
@@ -128,6 +130,9 @@ namespace ToVPatcher {
 				throw new PatchingException( "File not found: " + scenarioPath );
 			}
 			if ( worker != null ) { worker.ReportProgress( 0, "Confirming source file..." ); }
+			// if patched file exists and matches, exit early
+			string outPath = Path.Combine( outDir, "scenario.dat" );
+			try { CompareMd5Output( outPath, outMd5 ); return; } catch ( PatchingException ) { } catch ( FileNotFoundException ) { }
 			CompareMd5( scenarioPath, "4ef82c6ebc5f1303b07c97aa848db123" );
 
 			// extract scenario.dat
@@ -167,7 +172,6 @@ namespace ToVPatcher {
 
 			// pack it back up
 			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
-			string outPath = Path.Combine( outDir, "scenario.dat" );
 			using ( var scenarioNew = new HyoutaTools.Tales.Vesperia.Scenario.ScenarioDat() ) {
 				scenarioNew.Import( extractPath );
 				scenarioNew.Write( outPath );
@@ -183,6 +187,9 @@ namespace ToVPatcher {
 				throw new PatchingException( "File not found: " + btlPath );
 			}
 			if ( worker != null ) { worker.ReportProgress( 0, "Confirming source file..." ); }
+			// if patched file exists and matches, exit early
+			string outPath = Path.Combine( outDir, "btl.svo" );
+			try { CompareMd5Output( outPath, outMd5 ); return; } catch ( PatchingException ) { } catch ( FileNotFoundException ) { }
 			CompareMd5( btlPath, "37bed259717dd27e5145d8899e7c36d9" );
 
 			// extract
@@ -230,7 +237,6 @@ namespace ToVPatcher {
 			File.Move( Path.Combine( extractPath, "BTL_PACK.DAT.new" ), Path.Combine( extractPath, "BTL_PACK.DAT" ) );
 			Directory.Delete( btlPackPath, true );
 
-			string outPath = Path.Combine( outDir, "btl.svo" );
 			using ( var fps4btl = new FPS4( btlPath ) ) {
 				fps4btl.Alignment = 0x800;
 				fps4btl.Pack( extractPath, outPath );
@@ -244,6 +250,9 @@ namespace ToVPatcher {
 				throw new PatchingException( "File not found: " + chatPath );
 			}
 			if ( worker != null ) { worker.ReportProgress( 0, "Confirming source file..." ); }
+			// if patched file exists and matches, exit early
+			string outPath = Path.Combine( outDir, "chat.svo" );
+			try { CompareMd5Output( outPath, outMd5 ); return; } catch ( PatchingException ) { } catch ( FileNotFoundException ) { }
 			CompareMd5( chatPath, "7f0992514818e791ba64a987b6accf88" );
 
 			if ( worker != null ) { worker.ReportProgress( 0, "Extracting source file..." ); }
@@ -285,7 +294,6 @@ namespace ToVPatcher {
 			}
 
 			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
-			string outPath = Path.Combine( outDir, "chat.svo" );
 			using ( var fps4 = new FPS4( chatPath ) ) {
 				fps4.Alignment = 0x800;
 				fps4.Pack( extractPath, outPath );
@@ -299,6 +307,9 @@ namespace ToVPatcher {
 				throw new PatchingException( "File not found: " + uiPath );
 			}
 			if ( worker != null ) { worker.ReportProgress( 0, "Confirming source file..." ); }
+			// if patched file exists and matches, exit early
+			string outPath = Path.Combine( outDir, "UI.svo" );
+			try { CompareMd5Output( outPath, outMd5 ); return; } catch ( PatchingException ) { } catch ( FileNotFoundException ) { }
 			CompareMd5( uiPath, "9d0a479c838c4811e5df5f6a6815071d" );
 
 			// extract
@@ -333,7 +344,6 @@ namespace ToVPatcher {
 
 			// pack
 			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
-			string outPath = Path.Combine( outDir, "UI.svo" );
 			using ( var fps4btl = new FPS4( uiPath ) ) {
 				fps4btl.Alignment = 0x800;
 				fps4btl.Pack( extractPath, outPath );
@@ -347,6 +357,9 @@ namespace ToVPatcher {
 				throw new PatchingException( "File not found: " + effectPath );
 			}
 			if ( worker != null ) { worker.ReportProgress( 0, "Confirming source file..." ); }
+			// if patched file exists and matches, exit early
+			string outPath = Path.Combine( outDir, "effect.svo" );
+			try { CompareMd5Output( outPath, outMd5 ); return; } catch ( PatchingException ) { } catch ( FileNotFoundException ) { }
 			CompareMd5( effectPath, "ada3bdb2e2ca481b44bc9e209b019dc8" );
 
 			// extract effect.svo
@@ -399,7 +412,6 @@ namespace ToVPatcher {
 
 			// pack up modified effect.svo
 			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
-			string outPath = Path.Combine( outDir, "effect.svo" );
 			using ( var fps4 = new FPS4( effectPath ) ) {
 				fps4.Alignment = 0x800;
 				fps4.Pack( extractPath, outPath );
@@ -415,6 +427,9 @@ namespace ToVPatcher {
 				throw new PatchingException( "File not found: " + charaPath );
 			}
 			if ( worker != null ) { worker.ReportProgress( 0, "Confirming source file..." ); }
+			// if patched file exists and matches, exit early
+			string outPath = Path.Combine( outDir, "chara.svo" );
+			try { CompareMd5Output( outPath, outMd5 ); return; } catch ( PatchingException ) { } catch ( FileNotFoundException ) { }
 			CompareMd5( charaPath, "38984a5656b7a2faac3a7e24c962607e" );
 
 			if ( worker != null ) { worker.ReportProgress( 0, "Extracting source file..." ); }
@@ -587,7 +602,6 @@ namespace ToVPatcher {
 			}
 
 			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
-			string outPath = Path.Combine( outDir, "chara.svo" );
 			using ( var fps4 = new FPS4( charaPath ) ) {
 				fps4.Alignment = 0x800;
 				fps4.Pack( extractPath, outPath );
@@ -603,6 +617,9 @@ namespace ToVPatcher {
 			if ( !File.Exists( paramPath ) ) {
 				throw new PatchingException( "File not found: " + paramPath );
 			}
+			// if patched file exists and matches, exit early
+			string outPath = Path.Combine( outDir, "PARAM.SFO" );
+			try { CompareMd5Output( outPath, outMd5 ); return; } catch ( PatchingException ) { } catch ( FileNotFoundException ) { }
 			CompareMd5( paramPath, "d5dd7447f08ae0431e9039f89bed8118" );
 
 			byte[] p = System.IO.File.ReadAllBytes( paramPath );
@@ -619,7 +636,6 @@ namespace ToVPatcher {
 			// set english name length
 			p[0xA8] = (byte)( engName.Length + 1 );
 
-			string outPath = Path.Combine( outDir, "PARAM.SFO" );
 			System.IO.File.WriteAllBytes( outPath, p );
 
 			if ( outMd5 != null ) { CompareMd5Output( outPath, outMd5 ); }

@@ -83,6 +83,8 @@ Instructions
   If you've followed this readme correctly until now, it should automatically find and patch all of the Tales of Vesperia game files you provided.
   This step may take a long time! Due to how Tales of Vesperia stores its files, it's necessary to unpack/decompress, then patch, and then recompress/repack the vast majority of the game files. Please be patient.
   
+  If you for whatever reason need to interrupt the patching process, just reopen ToVPatcher later and hit the Patch! button again. It will recognize already patched files and just patch the remaining ones.
+  
   Before you proceed to the next step, please make sure all files were patched correctly, as indicated by the green checkmarks next to each file in ToVPatcher.
   
   
