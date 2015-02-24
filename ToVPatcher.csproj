@@ -79,6 +79,7 @@
     <Compile Include="Tales\tlzc\TLZC.cs" />
     <Compile Include="Tales\Vesperia\FPS4\FPS4.cs" />
     <Compile Include="Tales\Vesperia\Scenario\ScenarioDat.cs" />
+    <Compile Include="TempUtil.cs" />
     <Compile Include="Util.cs" />
     <EmbeddedResource Include="FileSelectControl.resx">
       <DependentUpon>FileSelectControl.cs</DependentUpon>

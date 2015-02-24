@@ -78,13 +78,13 @@ namespace ToVPatcher {
 			File.WriteAllBytes( outfile, output );
 		}
 		static string tlzcDecompressToTempFile( string infile ) {
-			string outfile = Path.GetTempFileName();
+			string outfile = TempUtil.GetTempFileName();
 			tlzcDecompress( infile, outfile );
 			return outfile;
 		}
 
 		static string svoExtractToTempDir( string infile, bool nometa = false ) {
-			string extractPath = Path.Combine( Path.GetTempPath(), Path.GetFileName( infile ) + ".extract" );
+			string extractPath = TempUtil.GetTempFileName();
 			if ( Directory.Exists( extractPath ) ) {
 				Directory.Delete( extractPath, true );
 			}
@@ -132,7 +132,7 @@ namespace ToVPatcher {
 
 			// extract scenario.dat
 			if ( worker != null ) { worker.ReportProgress( 0, "Extracting source file..." ); }
-			string extractPath = Path.Combine( Path.GetTempPath(), "scenario.dat.extract" );
+			string extractPath = TempUtil.GetTempFileName();
 			if ( Directory.Exists( extractPath ) ) {
 				Directory.Delete( extractPath, true );
 			}
@@ -148,8 +148,8 @@ namespace ToVPatcher {
 					worker.ReportProgress( ( i / files.Length ) * 100, "Patching file " + ( i + 1 ) + " of " + files.Length + "..." );
 				}
 
-				var tempfileDecomp = Path.GetTempFileName();
-				var tempfilePatched = Path.GetTempFileName();
+				var tempfileDecomp = TempUtil.GetTempFileName();
+				var tempfilePatched = TempUtil.GetTempFileName();
 
 				ComptoeDecompress( f, tempfileDecomp );
 				XdeltaApply(
@@ -202,7 +202,7 @@ namespace ToVPatcher {
 
 				string sourcePath = Path.Combine( file3Path, "0" + fileName );
 				string decompressedPath = tlzcDecompressToTempFile( sourcePath );
-				string patchedPath = Path.GetTempFileName();
+				string patchedPath = TempUtil.GetTempFileName();
 				XdeltaApply( decompressedPath, patchedPath, patch );
 				tlzcCompress( patchedPath, sourcePath );
 
@@ -315,7 +315,7 @@ namespace ToVPatcher {
 				string fileName = Path.GetFileNameWithoutExtension( patch );
 
 				string sourcePath = Path.Combine( extractPath, fileName );
-				string patchedPath = Path.GetTempFileName();
+				string patchedPath = TempUtil.GetTempFileName();
 				XdeltaApply( sourcePath, patchedPath, patch );
 				File.Delete( sourcePath );
 				File.Move( patchedPath, sourcePath );
@@ -389,7 +389,7 @@ namespace ToVPatcher {
 
 				string sourcePath = Path.Combine( extractPath, fileName + ".DAT" );
 				string decompressedPath = tlzcDecompressToTempFile( sourcePath );
-				string patchedPath = Path.GetTempFileName();
+				string patchedPath = TempUtil.GetTempFileName();
 				XdeltaApply( decompressedPath, patchedPath, patch );
 				tlzcCompress( patchedPath, sourcePath );
 
@@ -426,7 +426,7 @@ namespace ToVPatcher {
 
 			foreach ( var patchDirG in Directory.GetDirectories( patchDir ) ) {
 				string charaFilePath = Path.Combine( extractPath, Path.GetFileName( patchDirG ) + ".DAT" );
-				string decompPath = Path.GetTempFileName();
+				string decompPath = TempUtil.GetTempFileName();
 				tlzcDecompress( charaFilePath, decompPath );
 				string subDir = svoExtractToTempDir( decompPath );
 
@@ -436,10 +436,10 @@ namespace ToVPatcher {
 
 					foreach ( var patch in Directory.GetFiles( patchDirH ) ) {
 						string toPatchCompressed = Path.Combine( subSubDir, Path.GetFileNameWithoutExtension( patch ) );
-						string toPatch = Path.GetTempFileName();
+						string toPatch = TempUtil.GetTempFileName();
 						tlzcDecompress( toPatchCompressed, toPatch );
 
-						string patched = Path.GetTempFileName();
+						string patched = TempUtil.GetTempFileName();
 						XdeltaApply( toPatch, patched, patch );
 						File.Delete( toPatch );
 
@@ -447,7 +447,7 @@ namespace ToVPatcher {
 						File.Delete( patched );
 					}
 
-					string newSubPath = Path.GetTempFileName();
+					string newSubPath = TempUtil.GetTempFileName();
 					using ( var fps4 = new FPS4( subPath ) ) {
 						fps4.Alignment = 0x80;
 						fps4.Pack( subSubDir, newSubPath );
@@ -457,7 +457,7 @@ namespace ToVPatcher {
 					Directory.Delete( subSubDir, true );
 				}
 
-				string newPath = Path.GetTempFileName();
+				string newPath = TempUtil.GetTempFileName();
 				using ( var fps4 = new FPS4( decompPath ) ) {
 					fps4.Alignment = 0x80;
 					fps4.Pack( subDir, newPath );
@@ -489,7 +489,7 @@ namespace ToVPatcher {
 						tlzcCompress( EP_0670_010e_0002e_0006decomp, EP_0670_010e_0002e_0006 );
 						File.Delete( EP_0670_010e_0002e_0006decomp );
 					}
-					string EP_0670_010e_0002new = Path.GetTempFileName();
+					string EP_0670_010e_0002new = TempUtil.GetTempFileName();
 					using ( var fps4 = new FPS4( EP_0670_010e_0002 ) ) {
 						fps4.Alignment = 0x80;
 						fps4.Pack( EP_0670_010e_0002extract, EP_0670_010e_0002new );
@@ -498,7 +498,7 @@ namespace ToVPatcher {
 					File.Move( EP_0670_010e_0002new, EP_0670_010e_0002 );
 					Directory.Delete( EP_0670_010e_0002extract, true );
 				}
-				string EP_0670_010new = Path.GetTempFileName();
+				string EP_0670_010new = TempUtil.GetTempFileName();
 				using ( var fps4 = new FPS4( EP_0670_010decomp ) ) {
 					fps4.Alignment = 0x80;
 					fps4.Pack( EP_0670_010extract, EP_0670_010new );
@@ -525,7 +525,7 @@ namespace ToVPatcher {
 						tlzcCompress( GAMEOVERe_0002e_0001decomp, GAMEOVERe_0002e_0001 );
 						File.Delete( GAMEOVERe_0002e_0001decomp );
 					}
-					string GAMEOVERe_0002new = Path.GetTempFileName();
+					string GAMEOVERe_0002new = TempUtil.GetTempFileName();
 					using ( var fps4 = new FPS4( GAMEOVERe_0002 ) ) {
 						fps4.Alignment = 0x80;
 						fps4.Pack( GAMEOVERe_0002extract, GAMEOVERe_0002new );
@@ -534,7 +534,7 @@ namespace ToVPatcher {
 					File.Move( GAMEOVERe_0002new, GAMEOVERe_0002 );
 					Directory.Delete( GAMEOVERe_0002extract, true );
 				}
-				string GAMEOVERnew = Path.GetTempFileName();
+				string GAMEOVERnew = TempUtil.GetTempFileName();
 				using ( var fps4 = new FPS4( GAMEOVERdecomp ) ) {
 					fps4.Alignment = 0x80;
 					fps4.Pack( GAMEOVERextract, GAMEOVERnew );
@@ -566,7 +566,7 @@ namespace ToVPatcher {
 						tlzcCompress( POR_Ce_0002e_0027decomp, POR_Ce_0002e_0027 );
 						File.Delete( POR_Ce_0002e_0027decomp );
 					}
-					string POR_Ce_0002new = Path.GetTempFileName();
+					string POR_Ce_0002new = TempUtil.GetTempFileName();
 					using ( var fps4 = new FPS4( POR_Ce_0002 ) ) {
 						fps4.Alignment = 0x80;
 						fps4.Pack( POR_Ce_0002extract, POR_Ce_0002new );
@@ -575,7 +575,7 @@ namespace ToVPatcher {
 					File.Move( POR_Ce_0002new, POR_Ce_0002 );
 					Directory.Delete( POR_Ce_0002extract, true );
 				}
-				string POR_Cnew = Path.GetTempFileName();
+				string POR_Cnew = TempUtil.GetTempFileName();
 				using ( var fps4 = new FPS4( POR_Cdecomp ) ) {
 					fps4.Alignment = 0x80;
 					fps4.Pack( POR_Cextract, POR_Cnew );

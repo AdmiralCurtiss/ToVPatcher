@@ -41,7 +41,7 @@ namespace ToVPatcher {
 
 			// patch the elf
 			if ( worker != null ) { worker.ReportProgress( 0, "Patching..." ); }
-			string patchedElf = Path.GetTempFileName();
+			string patchedElf = TempUtil.GetTempFileName();
 			Patcher.XdeltaApply( elfPath, patchedElf, Path.Combine( patchDir, "ToV.elf.xdelta3" ) );
 
 			if ( outMd5 != null ) { Patcher.CompareMd5Output( patchedElf, outMd5 ); }

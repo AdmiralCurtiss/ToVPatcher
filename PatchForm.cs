@@ -33,6 +33,8 @@ namespace ToVPatcher {
 		}
 
 		private void PatchForm_Load( object sender, EventArgs e ) {
+			TempUtil.RemoveTempFolder();
+
 			if ( !Directory.Exists( "new/patches" ) ) {
 				MessageBox.Show( this,
 					"Patch folder could not be found at " + Path.GetFullPath( "new/patches" ) + "." + Environment.NewLine +
@@ -172,6 +174,8 @@ namespace ToVPatcher {
 						Thread.Sleep( 300 );
 					}
 				}
+
+				TempUtil.RemoveTempFolder();
 
 				Invoke( new BoolDelegate( SetInteractionEnabled ), true );
 			} );
