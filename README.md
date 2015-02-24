@@ -100,6 +100,23 @@ Please note that the Install option on the title screen does not work properly w
 There are no known save file incompatibilities. Saves created with the original Japanese version can be loaded with the patch and vice-versa.
 
 
+Credits & Thanks
+================
+
+This patch uses parts of the official Xbox 360 localization that were left on the Japanese PS3 game disc. Many thanks to Bandai Namco Games and the original localization team for providing a mostly solid localization for the Xbox 360 version of the game, as well as creating the game in the first place.
+
+Other than that, the following people helped with the creation of this patch:
+
+The Project Lead and initiator of the project was **[Admiral H. Curtiss](http://hyouta.com/)**, also known as Pikachu025. He also did some tool programming and made the online translation guide. The game script was translated by **ruta** and an **Anonymous Chinchilla**, who also ended up doing a lot of the editing. They were later joined by **Fedule** to help out with the editing.
+
+Also featuring **[Kajitani-Eizan](http://www.blade2187.com/)** as the Arcane Arteist.
+
+Special Thanks go to **Tempus** and **AerialX** for hosting [the website](http://talesofvesperia.net/) and providing tools from the cancelled Tales of Graces Wii project, **[throughhim413](http://a0t.co/)** for miscellaneous help here and there, and **gbcft** for helping with the tlzc compression some game files use.
+
+
+This patcher uses [comptoe](https://github.com/soywiz/talestra/tree/master/compto) by [soywiz](http://www.soywiz.com/) for de- and recompressing some files and [xdelta](http://xdelta.org/) to perform the actual file patching. It also requires ebootMOD to de- and encrypt the game executable. The online translation guide was inspired by the [Vesperia Browser](http://apps.lushu.org/vesperia/).
+
+
 A Note on TROPHY.TRP
 --------------------
 
