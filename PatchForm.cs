@@ -68,69 +68,78 @@ namespace ToVPatcher {
 			fileSelectControlElf.PatchDir = "new/patches";
 			fileSelectControlElf.PatchFunction = ElfPatcher.PatchElf;
 			fileSelectControlElf.OutputChecksum = OutputChecksums.GetValueOrDefault( "ToV.elf", null );
-			FileSelectControls.Add( fileSelectControlElf );
 
 			fileSelectControlString.LabelText = "string.svo";
 			fileSelectControlString.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "string.svo" );
 			fileSelectControlString.PatchDir = "new/patches";
 			fileSelectControlString.PatchFunction = Patcher.PatchString;
 			fileSelectControlString.OutputChecksum = OutputChecksums.GetValueOrDefault( "string.svo", null );
-			FileSelectControls.Add( fileSelectControlString ); 
 
 			fileSelectControlScenario.LabelText = "scenario.dat";
 			fileSelectControlScenario.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "scenario.dat" );
 			fileSelectControlScenario.PatchDir = "new/patches/scenario";
 			fileSelectControlScenario.PatchFunction = Patcher.PatchScenario;
 			fileSelectControlScenario.OutputChecksum = OutputChecksums.GetValueOrDefault( "scenario.dat", null );
-			FileSelectControls.Add( fileSelectControlScenario ); 
 
 			fileSelectControlBtl.LabelText = "btl.svo";
 			fileSelectControlBtl.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "btl.svo" );
 			fileSelectControlBtl.PatchDir = "new/patches/btl";
 			fileSelectControlBtl.PatchFunction = Patcher.PatchBtl;
 			fileSelectControlBtl.OutputChecksum = OutputChecksums.GetValueOrDefault( "btl.svo", null );
-			FileSelectControls.Add( fileSelectControlBtl ); 
 
 			fileSelectControlChat.LabelText = "chat.svo";
 			fileSelectControlChat.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "chat.svo" );
 			fileSelectControlChat.PatchDir = "new/patches/chat";
 			fileSelectControlChat.PatchFunction = Patcher.PatchChat;
 			fileSelectControlChat.OutputChecksum = OutputChecksums.GetValueOrDefault( "chat.svo", null );
-			FileSelectControls.Add( fileSelectControlChat ); 
 
 			fileSelectControlUI.LabelText = "UI.svo";
 			fileSelectControlUI.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "UI.svo" );
 			fileSelectControlUI.PatchDir = "new/patches/UI";
 			fileSelectControlUI.PatchFunction = Patcher.PatchUI;
 			fileSelectControlUI.OutputChecksum = OutputChecksums.GetValueOrDefault( "UI.svo", null );
-			FileSelectControls.Add( fileSelectControlUI ); 
 
 			fileSelectControlEffect.LabelText = "effect.svo";
 			fileSelectControlEffect.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "effect.svo" );
 			fileSelectControlEffect.PatchDir = "new/patches/effect";
 			fileSelectControlEffect.PatchFunction = Patcher.PatchEffect;
 			fileSelectControlEffect.OutputChecksum = OutputChecksums.GetValueOrDefault( "effect.svo", null );
-			FileSelectControls.Add( fileSelectControlEffect ); 
 
 			fileSelectControlChara.LabelText = "chara.svo";
 			fileSelectControlChara.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "chara.svo" );
 			fileSelectControlChara.PatchDir = "new/patches/chara";
 			fileSelectControlChara.PatchFunction = Patcher.PatchChara;
 			fileSelectControlChara.OutputChecksum = OutputChecksums.GetValueOrDefault( "chara.svo", null );
-			FileSelectControls.Add( fileSelectControlChara ); 
+
+			fileSelectControlMenu.LabelText = "menu.svo";
+			fileSelectControlMenu.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "menu.svo" );
+			fileSelectControlMenu.PatchDir = "new/patches";
+			fileSelectControlMenu.PatchFunction = Patcher.PatchMenu;
+			fileSelectControlMenu.OutputChecksum = OutputChecksums.GetValueOrDefault( "menu.svo", null );
 
 			fileSelectControlParam.LabelText = "PARAM.SFO";
 			fileSelectControlParam.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "PARAM.SFO" );
 			fileSelectControlParam.PatchDir = null;
 			fileSelectControlParam.PatchFunction = Patcher.PatchParam;
 			fileSelectControlParam.OutputChecksum = OutputChecksums.GetValueOrDefault( "PARAM.SFO", null );
-			FileSelectControls.Add( fileSelectControlParam ); 
 
 			fileSelectControlTrophy.LabelText = "TROPHY.TRP";
 			fileSelectControlTrophy.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "TROPHY.TRP" );
 			fileSelectControlTrophy.PatchDir = "new/patches";
 			fileSelectControlTrophy.PatchFunction = Patcher.PatchTrophy;
 			fileSelectControlTrophy.OutputChecksum = OutputChecksums.GetValueOrDefault( "TROPHY.TRP", null );
+
+			FileSelectControls.Add( fileSelectControlElf );
+			FileSelectControls.Add( fileSelectControlBtl );
+			FileSelectControls.Add( fileSelectControlChara );
+			FileSelectControls.Add( fileSelectControlChat );
+			FileSelectControls.Add( fileSelectControlEffect );
+			FileSelectControls.Add( fileSelectControlMenu );
+			FileSelectControls.Add( fileSelectControlScenario );
+			FileSelectControls.Add( fileSelectControlString );
+			FileSelectControls.Add( fileSelectControlUI );
+
+			FileSelectControls.Add( fileSelectControlParam );
 			FileSelectControls.Add( fileSelectControlTrophy );
 		}
 

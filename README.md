@@ -56,13 +56,14 @@ Instructions
   
   The following files need to be patched:
   - EBOOT.BIN
-  - string.svo
-  - scenario.dat
   - btl.svo
-  - chat.svo
-  - UI.svo
-  - effect.svo
   - chara.svo
+  - chat.svo
+  - effect.svo
+  - menu.svo
+  - scenario.dat
+  - string.svo
+  - UI.svo
   
   Optionally you can also patch:
   - PARAM.SFO (Translates the game's name in the XMB.)

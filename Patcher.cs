@@ -125,6 +125,9 @@ namespace ToVPatcher {
 		public static void PatchString( string stringSvo, string patchDir, string outDir, string outMd5 = null, BackgroundWorker worker = null ) {
 			PatchGeneric( stringSvo, patchDir, outDir, "string.svo", "string.svo.xdelta3", "831bf148d6c1e2002a6a94b43cfe8f6c", outMd5 );
 		}
+		public static void PatchMenu( string menuSvo, string patchDir, string outDir, string outMd5 = null, BackgroundWorker worker = null ) {
+			PatchGeneric( menuSvo, patchDir, outDir, "menu.svo", "menu.svo.xdelta3", "28bcf828e03b708683a55db7c9306274", outMd5 );
+		}
 		public static void PatchScenario( string scenarioPath, string patchDir, string outDir, string outMd5 = null, BackgroundWorker worker = null ) {
 			if ( !File.Exists( scenarioPath ) ) {
 				throw new PatchingException( "File not found: " + scenarioPath );
