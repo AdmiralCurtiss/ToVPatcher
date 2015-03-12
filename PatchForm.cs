@@ -126,7 +126,7 @@ namespace ToVPatcher {
 			fileSelectControlTrophy.LabelText = "TROPHY.TRP";
 			fileSelectControlTrophy.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "TROPHY.TRP" );
 			fileSelectControlTrophy.PatchDir = "new/patches";
-			fileSelectControlTrophy.PatchFunction = Patcher.PatchTrophy;
+			fileSelectControlTrophy.PatchFunction = PatchTrophyAfterWarning;
 			fileSelectControlTrophy.OutputChecksum = OutputChecksums.GetValueOrDefault( "TROPHY.TRP", null );
 
 			FileSelectControls.Add( fileSelectControlElf );
@@ -168,6 +168,24 @@ namespace ToVPatcher {
 				ctrl.SetInteractionEnabled( value );
 			}
 			IsInteractionEnabled = value;
+		}
+
+		public static void PatchTrophyAfterWarning( string trophyTrp, string patchDir, string outDir, string outMd5 = null, BackgroundWorker worker = null ) {
+			if ( File.Exists( trophyTrp ) ) {
+				var result = MessageBox.Show(
+					"TROPHY.TRP is officially signed, so the patched file will not work (and will, in fact, delete all your Tales of Vesperia trophies " +
+					"if you happen to have some!) unless you can find a way to make the console not confirm that TROPHY.TRP is signed correctly. " +
+					"This patching process is only provided in case such a thing becomes possible in the future. " + 
+					"It is also not recommend to use a modified TROPHY.TRP file if you ever plan to sync your trophies with the official PSN servers." +
+					"\n\nAre you absolutely sure you want to patch TROPHY.TRP?", "A Note on TROPHY.TRP", MessageBoxButtons.YesNo, MessageBoxIcon.Warning );
+				if ( result == DialogResult.Yes ) {
+					Patcher.PatchTrophy( trophyTrp, patchDir, outDir, outMd5, worker );
+				} else {
+					throw new PatchingException( "Cancelled by user." );
+				}
+			} else {
+				throw new PatchingException( "File not found: " + trophyTrp );
+			}
 		}
 
 		private void buttonPatch_Click( object sender, EventArgs e ) {
