@@ -17,7 +17,7 @@ We cannot take responsibility for anything you may choose to do or install in th
 
 As of the release of this patch, there is **no known software exploit to run homebrew on or downgrade a console that has been updated past firmware version 3.55**. **Do not attempt to downgrade consoles on higher firmware versions!**
 
-If you are not confident, please use the online script reference instead.
+If you are not confident, [please use the online translation guide instead](http://hyouta.com/vesperia/).
 
 
 Requirements
@@ -67,7 +67,7 @@ Instructions
   
   Optionally you can also patch:
   - PARAM.SFO (Translates the game's name in the XMB.)
-  - TROPHY.TRP (*IMPORTANT: WILL NOT WORK AS INTENDED! SEE NOTE AT THE BOTTOM OF THIS FILE!*)
+  - TROPHY.TRP (**IMPORTANT: WILL NOT WORK CORRECTLY! SEE NOTE AT THE BOTTOM OF THIS FILE!**)
   
   Copy all of them next to ToVPatcher.exe
   
@@ -75,6 +75,7 @@ Instructions
 * Acquire ebootMOD
   
   To modify EBOOT.BIN, we need a way to de- and encrypt it. For legal reasons, we cannot provide a tool to do this, so you'll have to find it yourself. Place all files from ebootMOD into the provided empty "ebootmod" folder, so that the executable can be found at ./ebootmod/ebootMOD.exe
+  
   I have tested this with the ebootMOD executable last modified on March 31st, 2011, but other versions may work as well.
   
   
@@ -82,6 +83,7 @@ Instructions
   
   Now it's time to actually patch. Run ToVPatcher.exe, and hit the big Patch! button in the window that pops up.
   If you've followed this readme correctly until now, it should automatically find and patch all of the Tales of Vesperia game files you provided.
+  
   This step may take a long time! Due to how Tales of Vesperia stores its files, it's necessary to unpack/decompress, then patch, and then recompress/repack the vast majority of the game files. Please be patient.
   
   If you for whatever reason need to interrupt the patching process, just reopen ToVPatcher later and hit the Patch! button again. It will recognize already patched files and just patch the remaining ones.
@@ -92,6 +94,7 @@ Instructions
 * Overwrite the original files with the patched ones
   
   Once ToVPatcher is done, you can find the patched files in ./new/patched/
+  
   Copy them back to your dumped copy of Tales of Vesperia, overwriting the originals.
   
   
@@ -125,4 +128,4 @@ This patcher uses [comptoe](https://github.com/soywiz/talestra/tree/master/compt
 A Note on TROPHY.TRP
 --------------------
 
-TROPHY.TRP is officially signed, so the patched file will not work (and will, in fact, delete all your Tales of Vesperia trophies if you happen to have some!) unless you can find a way to make the console not confirm that TROPHY.TRP is signed correctly. I have not found such a way, but the file is provided anyway in case such a thing becomes possible in the future.
+TROPHY.TRP is officially signed, so the patched file will not work (and will, in fact, delete all your Tales of Vesperia trophies if you happen to have some!) unless you can find a way to make the console not confirm that TROPHY.TRP is signed correctly. I have not found such a way, but the patching process is provided anyway in case such a thing becomes possible in the future. Either way, it is not recommended to use a modified TROPHY.TRP file if you ever plan to sync your trophies with the official PSN servers.
