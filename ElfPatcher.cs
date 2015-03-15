@@ -32,8 +32,8 @@ namespace ToVPatcher {
 				// this is super ugly but the only sensible way since calling unself directly searches the keys who-knows-where
 				try {
 					RunEbootModAndKill( ebootModPath, "\"" + ebootPath + "\"" );
-				} catch ( Win32Exception e ) {
-					throw new PatchingException( "Failed during execution of ebootMOD. Make sure ebootMOD can be found at " + ebootModPath + " and try again." );
+				} catch ( Exception e ) {
+					throw new PatchingException( "Failed during execution of ebootMOD. Make sure you copied _everything_ from the ebootmod archive into the ebootmod folder and try again.", e );
 				}
 				// sleep a bit to reduce chance of ebootMod still having the file handle
 				System.Threading.Thread.Sleep( 250 );
