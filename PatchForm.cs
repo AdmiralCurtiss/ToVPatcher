@@ -172,6 +172,7 @@ namespace ToVPatcher {
 
 		public static void PatchTrophyAfterWarning( string trophyTrp, string patchDir, string outDir, string outMd5 = null, BackgroundWorker worker = null ) {
 			if ( File.Exists( trophyTrp ) ) {
+				if ( worker != null ) { worker.ReportProgress( 0, "Disclaimer has opened up in other window. Read carefully!" ); }
 				var result = MessageBox.Show(
 					"TROPHY.TRP is officially signed, so the patched file will not work (and will, in fact, delete all your Tales of Vesperia trophies " +
 					"if you happen to have some!) unless you can find a way to make the console not confirm that TROPHY.TRP is signed correctly. " +
