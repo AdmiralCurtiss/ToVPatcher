@@ -83,6 +83,15 @@ namespace ToVPatcher {
 			BackgroundWorker worker = ( (BackgroundWorker)sender );
 			Invoke( new VoidDelegate( ShowIconLoading ) );
 			worker.ReportProgress( 0, "Patching " + LabelText + "..." );
+
+			// if file is readonly remove that property
+			if ( System.IO.File.Exists( FilePath ) ) {
+				var attr = System.IO.File.GetAttributes( FilePath );
+				if ( ( attr & System.IO.FileAttributes.ReadOnly ) == System.IO.FileAttributes.ReadOnly ) {
+					System.IO.File.SetAttributes( FilePath, attr & ~System.IO.FileAttributes.ReadOnly );
+				}
+			}
+
 			PatchFunction( FilePath, PatchDir, OutDir, OutputChecksum, worker );
 			worker.ReportProgress( 100, "Successfully patched " + LabelText + "!" );
 		}
