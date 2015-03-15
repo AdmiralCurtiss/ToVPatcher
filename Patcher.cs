@@ -627,9 +627,17 @@ namespace ToVPatcher {
 			// if patched file exists and matches, exit early
 			string outPath = Path.Combine( outDir, "PARAM.SFO" );
 			try { CompareMd5Output( outPath, outMd5 ); return; } catch ( PatchingException ) { } catch ( FileNotFoundException ) { }
-			CompareMd5( paramPath, "d5dd7447f08ae0431e9039f89bed8118" );
+
+			try {
+				CompareMd5( paramPath, "d5dd7447f08ae0431e9039f89bed8118" );
+			} catch ( PatchingException ) {
+				CompareMd5( paramPath, "be7c9c7996b02f7aa6afc3b54b5b7ab4" );
+			}
 
 			byte[] p = System.IO.File.ReadAllBytes( paramPath );
+
+			// clear attributes
+			p[0x158] = 0;
 
 			// clear name field
 			for ( int i = 0x378; i < 0x3A0; ++i ) {
