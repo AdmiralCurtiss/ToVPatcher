@@ -97,6 +97,7 @@ namespace ToVPatcher {
 			if ( e.Error != null ) {
 				Invoke( new VoidDelegate( ShowIconError ) );
 				Invoke( new StringDelegate( UpdateStatusMessage ), "Error: " + e.Error.GetType() + ": " + e.Error.Message );
+				Logger.LogError( e.Error.ToString() );
 			} else {
 				Invoke( new VoidDelegate( ShowIconSuccess ) );
 				Successful = true;

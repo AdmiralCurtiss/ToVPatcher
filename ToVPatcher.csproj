@@ -54,6 +54,7 @@
     <Compile Include="FileSelectControl.Designer.cs">
       <DependentUpon>FileSelectControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Logger.cs" />
     <Compile Include="PatchForm.cs">
       <SubType>Form</SubType>
     </Compile>
