@@ -73,7 +73,7 @@ namespace HyoutaTools.Tales.Vesperia.Scenario {
 		}
 
 		public void Import( string inDirectory ) {
-			string[] files = System.IO.Directory.GetFiles( inDirectory );
+			string[] files = Util.DirectoryGetFilesWorkaround( inDirectory );
 
 			Entries = new List<ScenarioDatEntry>( files.Length );
 			foreach ( string f in files ) {

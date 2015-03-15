@@ -491,5 +491,29 @@ namespace HyoutaTools {
 
 			Directory.Delete( path, true );
 		}
+
+		public static string[] DirectoryGetFilesWorkaround( string dirpath ) {
+			string[] files = Directory.GetFiles( dirpath );
+			return FixFrenchLocaleBugMaybe( files );
+		}
+		public static string[] DirectoryGetFilesWorkaround( string dirpath, string searchPattern, SearchOption searchOption ) {
+			string[] files = Directory.GetFiles( dirpath, searchPattern, searchOption );
+			return FixFrenchLocaleBugMaybe( files );
+		}
+		// fixes super weird bug seen on a french windows locale that adds ._ in front of filenames from Directory.GetFiles
+		public static string[] FixFrenchLocaleBugMaybe( string[] files ) {
+			for ( int i = 0; i < files.Length; ++i ) {
+				string path = files[i];
+				string dir = Path.GetDirectoryName( path );
+				string name = Path.GetFileName( path );
+
+				if ( name.StartsWith( "." ) ) {
+					name = name.TrimStart( new char[] { '.', '_' } );
+					files[i] = Path.Combine( dir, name );
+				}
+			}
+
+			return files;
+		}
 	}
 }

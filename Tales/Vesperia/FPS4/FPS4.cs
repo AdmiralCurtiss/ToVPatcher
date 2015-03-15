@@ -167,7 +167,7 @@ namespace HyoutaTools.Tales.Vesperia.FPS4 {
 		}
 
 		public void Pack( string inPath, string outFilename, string metadata = null ) {
-			var files = System.IO.Directory.GetFiles( inPath );
+			var files = Util.DirectoryGetFilesWorkaround( inPath );
 			Pack( files, outFilename, metadata );
 		}
 		public void Pack( string[] files, string outFilename, string metadata = null ) {

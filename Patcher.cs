@@ -150,7 +150,7 @@ namespace ToVPatcher {
 
 			// patch all files
 			int i = 0;
-			var files = Directory.GetFiles( extractPath );
+			var files = Util.DirectoryGetFilesWorkaround( extractPath );
 			foreach ( var f in files ) {
 				if ( worker != null ) {
 					worker.ReportProgress( ( i / files.Length ) * 100, "Patching file " + ( i + 1 ) + " of " + files.Length + "..." );
@@ -203,7 +203,7 @@ namespace ToVPatcher {
 
 			// patch
 			int i = 0;
-			var files = Directory.GetFiles( patchDir );
+			var files = Util.DirectoryGetFilesWorkaround( patchDir );
 			foreach ( string patch in files ) {
 				if ( worker != null ) {
 					worker.ReportProgress( ( i / files.Length ) * 100, "Patching file " + ( i + 1 ) + " of " + files.Length + "..." );
@@ -260,7 +260,7 @@ namespace ToVPatcher {
 
 			if ( worker != null ) { worker.ReportProgress( 0, "Extracting source file..." ); }
 			string extractPath = svoExtractToTempDir( chatPath );
-			var files = Directory.GetFiles( extractPath );
+			var files = Util.DirectoryGetFilesWorkaround( extractPath );
 
 			int i = 0;
 			int filecount = files.Count( x => Path.GetFileName( x ).StartsWith( "VC" ) && Path.GetFileName( x ).EndsWith( ".DAT" ) );
@@ -321,7 +321,7 @@ namespace ToVPatcher {
 
 			// patch
 			int i = 0;
-			var files = Directory.GetFiles( patchDir );
+			var files = Util.DirectoryGetFilesWorkaround( patchDir );
 			foreach ( string patch in files ) {
 				if ( worker != null ) {
 					worker.ReportProgress( ( i / files.Length ) * 100, "Patching file " + ( i + 1 ) + " of " + files.Length + "..." );
@@ -400,7 +400,7 @@ namespace ToVPatcher {
 			System.IO.File.Delete( dice2 );
 
 			// remaining assets with xdelta patches
-			foreach ( string patch in Directory.GetFiles( patchDir ) ) {
+			foreach ( string patch in Util.DirectoryGetFilesWorkaround( patchDir ) ) {
 				string fileName = Path.GetFileNameWithoutExtension( patch );
 
 				string sourcePath = Path.Combine( extractPath, fileName + ".DAT" );
@@ -452,7 +452,7 @@ namespace ToVPatcher {
 					string subPath = Path.Combine( subDir, Path.GetFileName( patchDirH ) );
 					string subSubDir = svoExtractToTempDir( subPath, true );
 
-					foreach ( var patch in Directory.GetFiles( patchDirH ) ) {
+					foreach ( var patch in Util.DirectoryGetFilesWorkaround( patchDirH ) ) {
 						string toPatchCompressed = Path.Combine( subSubDir, Path.GetFileNameWithoutExtension( patch ) );
 						string toPatch = TempUtil.GetTempFileName();
 						tlzcDecompress( toPatchCompressed, toPatch );
@@ -605,7 +605,11 @@ namespace ToVPatcher {
 			}
 
 			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
-			using ( var fps4 = new FPS4( charaPath ) ) {
+			using ( var fps4 = new FPS4() ) {
+				using ( var oldfps4 = new FPS4( charaPath ) ) {
+					fps4.Unknown2 = oldfps4.Unknown2;
+					fps4.ArchiveName = oldfps4.ArchiveName;
+				}
 				fps4.Alignment = 0x800;
 				fps4.Pack( extractPath, outPath );
 			}
