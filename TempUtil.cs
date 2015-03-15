@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using HyoutaTools;
 
 namespace ToVPatcher {
 	static class TempUtil {
@@ -23,7 +24,7 @@ namespace ToVPatcher {
 
 		public static void RemoveTempFolder() {
 			if ( Directory.Exists( GetTempFolder() ) ) {
-				Directory.Delete( GetTempFolder(), true );
+				Util.DeleteDirectoryAggressive( GetTempFolder(), true );
 			}
 		}
 	}

@@ -474,5 +474,22 @@ namespace HyoutaTools {
 			TValue value;
 			return dictionary.TryGetValue( key, out value ) ? value : defaultValue;
 		}
+
+		public static void DeleteDirectoryAggressive( string path, bool recursive = true ) {
+			if ( !recursive ) { Directory.Delete( path ); return; }
+
+			for ( int i = 0; i < 16; ++i ) {
+				try {
+					Directory.Delete( path, true );
+				} catch ( IOException ) {
+				} catch ( UnauthorizedAccessException ) {
+				}
+				System.Threading.Thread.Sleep( 1 );
+
+				if ( !Directory.Exists( path ) ) { return; }
+			}
+
+			Directory.Delete( path, true );
+		}
 	}
 }

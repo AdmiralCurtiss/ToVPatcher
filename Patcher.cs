@@ -86,7 +86,7 @@ namespace ToVPatcher {
 		static string svoExtractToTempDir( string infile, bool nometa = false ) {
 			string extractPath = TempUtil.GetTempFileName();
 			if ( Directory.Exists( extractPath ) ) {
-				Directory.Delete( extractPath, true );
+				Util.DeleteDirectoryAggressive( extractPath, true );
 			}
 			Directory.CreateDirectory( extractPath );
 			using ( var fps4 = new FPS4( infile ) ) {
@@ -142,7 +142,7 @@ namespace ToVPatcher {
 			if ( worker != null ) { worker.ReportProgress( 0, "Extracting source file..." ); }
 			string extractPath = TempUtil.GetTempFileName();
 			if ( Directory.Exists( extractPath ) ) {
-				Directory.Delete( extractPath, true );
+				Util.DeleteDirectoryAggressive( extractPath, true );
 			}
 			Directory.CreateDirectory( extractPath );
 			var scenario = new HyoutaTools.Tales.Vesperia.Scenario.ScenarioDat( new System.IO.FileStream( scenarioPath, System.IO.FileMode.Open ) );
@@ -181,7 +181,7 @@ namespace ToVPatcher {
 			}
 
 			// clean up
-			Directory.Delete( extractPath, true );
+			Util.DeleteDirectoryAggressive( extractPath, true );
 
 			if ( outMd5 != null ) { CompareMd5Output( outPath, outMd5 ); }
 		}
@@ -230,7 +230,7 @@ namespace ToVPatcher {
 			}
 			File.Delete( Path.Combine( btlPackPath, "0003" ) );
 			File.Move( Path.Combine( btlPackPath, "0003.new" ), Path.Combine( btlPackPath, "0003" ) );
-			Directory.Delete( file3Path, true );
+			Util.DeleteDirectoryAggressive( file3Path, true );
 
 			using ( var fps4btlPack = new FPS4( Path.Combine( extractPath, "BTL_PACK.DAT" ) ) ) {
 				fps4btlPack.Alignment = 0x80;
@@ -238,13 +238,13 @@ namespace ToVPatcher {
 			}
 			File.Delete( Path.Combine( extractPath, "BTL_PACK.DAT" ) );
 			File.Move( Path.Combine( extractPath, "BTL_PACK.DAT.new" ), Path.Combine( extractPath, "BTL_PACK.DAT" ) );
-			Directory.Delete( btlPackPath, true );
+			Util.DeleteDirectoryAggressive( btlPackPath, true );
 
 			using ( var fps4btl = new FPS4( btlPath ) ) {
 				fps4btl.Alignment = 0x800;
 				fps4btl.Pack( extractPath, outPath );
 			}
-			Directory.Delete( extractPath, true );
+			Util.DeleteDirectoryAggressive( extractPath, true );
 
 			if ( outMd5 != null ) { CompareMd5Output( outPath, outMd5 ); }
 		}
@@ -290,7 +290,7 @@ namespace ToVPatcher {
 
 					File.Delete( decompPath );
 					File.Delete( Path.Combine( extractPath, filename + ".new" ) );
-					Directory.Delete( skitExtractPath, true );
+					Util.DeleteDirectoryAggressive( skitExtractPath, true );
 
 					++i;
 				}
@@ -301,7 +301,7 @@ namespace ToVPatcher {
 				fps4.Alignment = 0x800;
 				fps4.Pack( extractPath, outPath );
 			}
-			Directory.Delete( extractPath, true );
+			Util.DeleteDirectoryAggressive( extractPath, true );
 
 			if ( outMd5 != null ) { CompareMd5Output( outPath, outMd5 ); }
 		}
@@ -351,7 +351,7 @@ namespace ToVPatcher {
 				fps4btl.Alignment = 0x800;
 				fps4btl.Pack( extractPath, outPath );
 			}
-			Directory.Delete( extractPath, true );
+			Util.DeleteDirectoryAggressive( extractPath, true );
 
 			if ( outMd5 != null ) { CompareMd5Output( outPath, outMd5 ); }
 		}
@@ -421,7 +421,7 @@ namespace ToVPatcher {
 			}
 
 			// clean up
-			System.IO.Directory.Delete( extractPath, true );
+			Util.DeleteDirectoryAggressive( extractPath, true );
 
 			if ( outMd5 != null ) { CompareMd5Output( outPath, outMd5 ); }
 		}
@@ -472,7 +472,7 @@ namespace ToVPatcher {
 					}
 					File.Delete( subPath );
 					File.Move( newSubPath, subPath );
-					Directory.Delete( subSubDir, true );
+					Util.DeleteDirectoryAggressive( subSubDir, true );
 				}
 
 				string newPath = TempUtil.GetTempFileName();
@@ -483,7 +483,7 @@ namespace ToVPatcher {
 				tlzcCompress( newPath, charaFilePath );
 				File.Delete( newPath );
 				File.Delete( decompPath );
-				Directory.Delete( subDir, true );
+				Util.DeleteDirectoryAggressive( subDir, true );
 			}
 
 			// dice minigame textures
@@ -514,7 +514,7 @@ namespace ToVPatcher {
 					}
 					File.Delete( EP_0670_010e_0002 );
 					File.Move( EP_0670_010e_0002new, EP_0670_010e_0002 );
-					Directory.Delete( EP_0670_010e_0002extract, true );
+					Util.DeleteDirectoryAggressive( EP_0670_010e_0002extract, true );
 				}
 				string EP_0670_010new = TempUtil.GetTempFileName();
 				using ( var fps4 = new FPS4( EP_0670_010decomp ) ) {
@@ -524,7 +524,7 @@ namespace ToVPatcher {
 				tlzcCompress( EP_0670_010new, EP_0670_010 );
 				File.Delete( EP_0670_010decomp );
 				File.Delete( EP_0670_010new );
-				Directory.Delete( EP_0670_010extract, true );
+				Util.DeleteDirectoryAggressive( EP_0670_010extract, true );
 			}
 
 			// "and they were never heard from again" textures
@@ -550,7 +550,7 @@ namespace ToVPatcher {
 					}
 					File.Delete( GAMEOVERe_0002 );
 					File.Move( GAMEOVERe_0002new, GAMEOVERe_0002 );
-					Directory.Delete( GAMEOVERe_0002extract, true );
+					Util.DeleteDirectoryAggressive( GAMEOVERe_0002extract, true );
 				}
 				string GAMEOVERnew = TempUtil.GetTempFileName();
 				using ( var fps4 = new FPS4( GAMEOVERdecomp ) ) {
@@ -560,7 +560,7 @@ namespace ToVPatcher {
 				tlzcCompress( GAMEOVERnew, GAMEOVER );
 				File.Delete( GAMEOVERdecomp );
 				File.Delete( GAMEOVERnew );
-				Directory.Delete( GAMEOVERextract, true );
+				Util.DeleteDirectoryAggressive( GAMEOVERextract, true );
 			}
 
 			// more dice minigame textures why are there so many copies of those
@@ -591,7 +591,7 @@ namespace ToVPatcher {
 					}
 					File.Delete( POR_Ce_0002 );
 					File.Move( POR_Ce_0002new, POR_Ce_0002 );
-					Directory.Delete( POR_Ce_0002extract, true );
+					Util.DeleteDirectoryAggressive( POR_Ce_0002extract, true );
 				}
 				string POR_Cnew = TempUtil.GetTempFileName();
 				using ( var fps4 = new FPS4( POR_Cdecomp ) ) {
@@ -601,7 +601,7 @@ namespace ToVPatcher {
 				tlzcCompress( POR_Cnew, POR_C );
 				File.Delete( POR_Cdecomp );
 				File.Delete( POR_Cnew );
-				Directory.Delete( POR_Cextract, true );
+				Util.DeleteDirectoryAggressive( POR_Cextract, true );
 			}
 
 			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
@@ -609,7 +609,7 @@ namespace ToVPatcher {
 				fps4.Alignment = 0x800;
 				fps4.Pack( extractPath, outPath );
 			}
-			Directory.Delete( extractPath, true );
+			Util.DeleteDirectoryAggressive( extractPath, true );
 
 			if ( outMd5 != null ) { CompareMd5Output( outPath, outMd5 ); }
 		}
