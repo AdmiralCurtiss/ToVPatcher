@@ -40,6 +40,8 @@ namespace ToVPatcher {
 		}
 
 		public static void XdeltaApply( string original, string patched, string patch ) {
+			Logger.LogFileData( original, "xdelta, infile" );
+			Logger.LogFileData( patch, "xdelta, patch" );
 			try {
 				if ( !Util.RunProgram( "xdelta", "-d -f -s \"" + original + "\" \"" + patch + "\" \"" + patched + "\"", false, false, true ) ) {
 					throw new PatchingException( "Patching failed: " + patch );
@@ -47,9 +49,11 @@ namespace ToVPatcher {
 			} catch ( Win32Exception e ) {
 				throw new PatchingException( "Failed during execution of xdelta. Make sure xdelta can be found at " + Path.GetFullPath( "xdelta.exe" ) + " and try again." );
 			}
+			Logger.LogFileData( patched, "xdelta, outfile" );
 		}
 
 		static void ComptoeDecompress( string infile, string outfile ) {
+			Logger.LogFileData( infile, "comptoe decomp, infile" );
 			try {
 				if ( !Util.RunProgram( "comptoe", "-d \"" + infile + "\" \"" + outfile + "\"", false, false, true ) ) {
 					throw new PatchingException( "Decompression failed: " + infile );
@@ -57,8 +61,10 @@ namespace ToVPatcher {
 			} catch ( Win32Exception e ) {
 				throw new PatchingException( "Failed during execution of comptoe. Make sure comptoe can be found at " + Path.GetFullPath( "comptoe.exe" ) + " and try again." );
 			}
+			Logger.LogFileData( outfile, "comptoe decomp, outfile" );
 		}
 		static void ComptoeCompress( string infile, string outfile ) {
+			Logger.LogFileData( infile, "comptoe comp, infile" );
 			try {
 				if ( !Util.RunProgram( "comptoe", "-c1 \"" + infile + "\" \"" + outfile + "\"", false, false, true ) ) {
 					throw new PatchingException( "Compression failed: " + infile );
@@ -66,17 +72,22 @@ namespace ToVPatcher {
 			} catch ( Win32Exception e ) {
 				throw new PatchingException( "Failed during execution of comptoe. Make sure comptoe can be found at " + Path.GetFullPath( "comptoe.exe" ) + " and try again." );
 			}
+			Logger.LogFileData( outfile, "comptoe comp, outfile" );
 		}
 
 		static void tlzcDecompress( string infile, string outfile ) {
+			Logger.LogFileData( infile, "tlzc decomp, infile" );
 			byte[] input = File.ReadAllBytes( infile );
 			var output = TLZC.Decompress( input );
 			File.WriteAllBytes( outfile, output );
+			Logger.LogFileData( outfile, "tlzc decomp, outfile" );
 		}
 		static void tlzcCompress( string infile, string outfile ) {
+			Logger.LogFileData( infile, "tlzc comp, infile" );
 			byte[] input = File.ReadAllBytes( infile );
 			var output = TLZC.Compress( input, 4, 64 );
 			File.WriteAllBytes( outfile, output );
+			Logger.LogFileData( outfile, "tlzc comp, outfile" );
 		}
 		static string tlzcDecompressToTempFile( string infile ) {
 			string outfile = TempUtil.GetTempFileName();
@@ -93,14 +104,18 @@ namespace ToVPatcher {
 			using ( var fps4 = new FPS4( infile ) ) {
 				fps4.Extract( extractPath, nometa );
 			}
+			Logger.LogDirData( extractPath, "FPS4 extract of " + infile );
 			return extractPath;
 		}
 
 		static void BlockCopy( string pathFrom, int locationFrom, string pathTo, int locationTo, int count ) {
+			Logger.LogFileData( pathFrom, "blockcopy, infile, 0x" + locationFrom.ToString( "X" ) + ", " + count + " bytes" );
+			Logger.LogFileData( pathTo, "blockcopy, target, pre-copy, 0x" + locationTo.ToString( "X" ) );
 			var fileFrom = System.IO.File.ReadAllBytes( pathFrom );
 			var fileTo = System.IO.File.ReadAllBytes( pathTo );
 			Util.CopyByteArrayPart( fileFrom, locationFrom, fileTo, locationTo, count );
 			System.IO.File.WriteAllBytes( pathTo, fileTo );
+			Logger.LogFileData( pathTo, "blockcopy, target, post-copy" );
 		}
 
 		static void PatchGeneric( string originalPath, string patchDir, string outDir, string filename, string patchname, string md5, string outMd5 = null ) {
@@ -138,6 +153,8 @@ namespace ToVPatcher {
 			string outPath = Path.Combine( outDir, "scenario.dat" );
 			try { CompareMd5Output( outPath, outMd5 ); return; } catch ( PatchingException ) { } catch ( FileNotFoundException ) { }
 			CompareMd5( scenarioPath, "4ef82c6ebc5f1303b07c97aa848db123" );
+			Logger.LogFileData( scenarioPath, "scenario.dat" );
+			Logger.LogDirData( patchDir, "scenario patches" );
 
 			// extract scenario.dat
 			if ( worker != null ) { worker.ReportProgress( 0, "Extracting source file..." ); }
@@ -176,10 +193,12 @@ namespace ToVPatcher {
 
 			// pack it back up
 			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
+			Logger.LogDirData( extractPath, "scenario dir patched" );
 			using ( var scenarioNew = new HyoutaTools.Tales.Vesperia.Scenario.ScenarioDat() ) {
 				scenarioNew.Import( extractPath );
 				scenarioNew.Write( outPath );
 			}
+			Logger.LogFileData( outPath, "scenario.dat patched" );
 
 			// clean up
 			Util.DeleteDirectoryAggressive( extractPath, true );
@@ -195,6 +214,8 @@ namespace ToVPatcher {
 			string outPath = Path.Combine( outDir, "btl.svo" );
 			try { CompareMd5Output( outPath, outMd5 ); return; } catch ( PatchingException ) { } catch ( FileNotFoundException ) { }
 			CompareMd5( btlPath, "37bed259717dd27e5145d8899e7c36d9" );
+			Logger.LogFileData( btlPath, "btl.svo" );
+			Logger.LogDirData( patchDir, "btl patches" );
 
 			// extract
 			if ( worker != null ) { worker.ReportProgress( 0, "Extracting source file..." ); }
@@ -225,6 +246,7 @@ namespace ToVPatcher {
 
 			// pack
 			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
+			Logger.LogDirData( file3Path, "btl/btl_pack/3 dir patched" );
 			using ( var fps4file3 = new FPS4( Path.Combine( btlPackPath, "0003" ) ) ) {
 				fps4file3.Alignment = 0x80;
 				fps4file3.Pack( file3Path, Path.Combine( btlPackPath, "0003.new" ) );
@@ -241,10 +263,12 @@ namespace ToVPatcher {
 			File.Move( Path.Combine( extractPath, "BTL_PACK.DAT.new" ), Path.Combine( extractPath, "BTL_PACK.DAT" ) );
 			Util.DeleteDirectoryAggressive( btlPackPath, true );
 
+			Logger.LogDirData( extractPath, "btl dir patched" );
 			using ( var fps4btl = new FPS4( btlPath ) ) {
 				fps4btl.Alignment = 0x800;
 				fps4btl.Pack( extractPath, outPath );
 			}
+			Logger.LogFileData( outPath, "btl.svo patched" );
 			Util.DeleteDirectoryAggressive( extractPath, true );
 
 			if ( outMd5 != null ) { CompareMd5Output( outPath, outMd5 ); }
@@ -258,6 +282,8 @@ namespace ToVPatcher {
 			string outPath = Path.Combine( outDir, "chat.svo" );
 			try { CompareMd5Output( outPath, outMd5 ); return; } catch ( PatchingException ) { } catch ( FileNotFoundException ) { }
 			CompareMd5( chatPath, "7f0992514818e791ba64a987b6accf88" );
+			Logger.LogFileData( chatPath, "chat.svo" );
+			Logger.LogDirData( patchDir, "chat patches" );
 
 			if ( worker != null ) { worker.ReportProgress( 0, "Extracting source file..." ); }
 			string extractPath = svoExtractToTempDir( chatPath );
@@ -298,10 +324,12 @@ namespace ToVPatcher {
 			}
 
 			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
+			Logger.LogDirData( extractPath, "chat dir patched" );
 			using ( var fps4 = new FPS4( chatPath ) ) {
 				fps4.Alignment = 0x800;
 				fps4.Pack( extractPath, outPath );
 			}
+			Logger.LogFileData( outPath, "chat.svo patched" );
 			Util.DeleteDirectoryAggressive( extractPath, true );
 
 			if ( outMd5 != null ) { CompareMd5Output( outPath, outMd5 ); }
@@ -315,6 +343,8 @@ namespace ToVPatcher {
 			string outPath = Path.Combine( outDir, "UI.svo" );
 			try { CompareMd5Output( outPath, outMd5 ); return; } catch ( PatchingException ) { } catch ( FileNotFoundException ) { }
 			CompareMd5( uiPath, "9d0a479c838c4811e5df5f6a6815071d" );
+			Logger.LogFileData( uiPath, "UI.svo" );
+			Logger.LogDirData( patchDir, "UI patches" );
 
 			// extract
 			if ( worker != null ) { worker.ReportProgress( 0, "Extracting source file..." ); }
@@ -348,10 +378,12 @@ namespace ToVPatcher {
 
 			// pack
 			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
+			Logger.LogDirData( extractPath, "UI dir patched" );
 			using ( var fps4btl = new FPS4( uiPath ) ) {
 				fps4btl.Alignment = 0x800;
 				fps4btl.Pack( extractPath, outPath );
 			}
+			Logger.LogFileData( outPath, "UI.svo patched" );
 			Util.DeleteDirectoryAggressive( extractPath, true );
 
 			if ( outMd5 != null ) { CompareMd5Output( outPath, outMd5 ); }
@@ -365,6 +397,8 @@ namespace ToVPatcher {
 			string outPath = Path.Combine( outDir, "effect.svo" );
 			try { CompareMd5Output( outPath, outMd5 ); return; } catch ( PatchingException ) { } catch ( FileNotFoundException ) { }
 			CompareMd5( effectPath, "ada3bdb2e2ca481b44bc9e209b019dc8" );
+			Logger.LogFileData( effectPath, "effect.svo" );
+			Logger.LogDirData( patchDir, "effect patches" );
 
 			// extract effect.svo
 			if ( worker != null ) { worker.ReportProgress( 0, "Extracting source file..." ); }
@@ -416,10 +450,12 @@ namespace ToVPatcher {
 
 			// pack up modified effect.svo
 			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
+			Logger.LogDirData( extractPath, "effect dir patched" );
 			using ( var fps4 = new FPS4( effectPath ) ) {
 				fps4.Alignment = 0x800;
 				fps4.Pack( extractPath, outPath );
 			}
+			Logger.LogFileData( outPath, "effect.svo patched" );
 
 			// clean up
 			Util.DeleteDirectoryAggressive( extractPath, true );
@@ -435,6 +471,8 @@ namespace ToVPatcher {
 			string outPath = Path.Combine( outDir, "chara.svo" );
 			try { CompareMd5Output( outPath, outMd5 ); return; } catch ( PatchingException ) { } catch ( FileNotFoundException ) { }
 			CompareMd5( charaPath, "38984a5656b7a2faac3a7e24c962607e" );
+			Logger.LogFileData( charaPath, "chara.svo" );
+			Logger.LogDirData( patchDir, "chara patches" );
 
 			if ( worker != null ) { worker.ReportProgress( 0, "Extracting source file..." ); }
 			string extractPath = svoExtractToTempDir( charaPath );
@@ -606,6 +644,7 @@ namespace ToVPatcher {
 			}
 
 			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
+			Logger.LogDirData( extractPath, "chara dir patched" );
 			using ( var fps4 = new FPS4() ) {
 				using ( var oldfps4 = new FPS4( charaPath ) ) {
 					fps4.Unknown2 = oldfps4.Unknown2;
@@ -614,6 +653,7 @@ namespace ToVPatcher {
 				fps4.Alignment = 0x800;
 				fps4.Pack( extractPath, outPath );
 			}
+			Logger.LogFileData( outPath, "chara.svo patched" );
 			Util.DeleteDirectoryAggressive( extractPath, true );
 
 			if ( outMd5 != null ) { CompareMd5Output( outPath, outMd5 ); }
