@@ -31,6 +31,7 @@ namespace ToVPatcher {
 		public static void CompareMd5Output( string path, string md5 ) {
 			string hash = CalcMd5( path );
 			if ( hash != md5 ) {
+				File.Delete( path );
 				throw new PatchingException(
 					"File did not patch correctly. " +
 					"New MD5 should be " + md5 + " but is " + hash + "."
