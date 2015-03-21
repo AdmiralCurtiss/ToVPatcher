@@ -167,6 +167,7 @@ namespace ToVPatcher {
 			foreach ( var ctrl in FileSelectControls ) {
 				ctrl.SetInteractionEnabled( value );
 			}
+			checkBoxLogging.Enabled = value;
 			IsInteractionEnabled = value;
 		}
 
@@ -219,6 +220,10 @@ namespace ToVPatcher {
 				MessageBox.Show( this, "Please wait until the patching has completed." );
 				e.Cancel = true;
 			}
+		}
+
+		private void checkBoxLogging_CheckedChanged( object sender, EventArgs e ) {
+			Logger.LoggingEnabled = checkBoxLogging.Checked;
 		}
 	}
 }

@@ -24,6 +24,7 @@
 		/// </summary>
 		private void InitializeComponent() {
 			this.buttonPatch = new System.Windows.Forms.Button();
+			this.checkBoxLogging = new System.Windows.Forms.CheckBox();
 			this.fileSelectControlMenu = new ToVPatcher.FileSelectControl();
 			this.fileSelectControlElf = new ToVPatcher.FileSelectControl();
 			this.fileSelectControlTrophy = new ToVPatcher.FileSelectControl();
@@ -43,11 +44,22 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonPatch.Location = new System.Drawing.Point(13, 13);
 			this.buttonPatch.Name = "buttonPatch";
-			this.buttonPatch.Size = new System.Drawing.Size(644, 41);
+			this.buttonPatch.Size = new System.Drawing.Size(542, 41);
 			this.buttonPatch.TabIndex = 0;
 			this.buttonPatch.Text = "Patch!";
 			this.buttonPatch.UseVisualStyleBackColor = true;
 			this.buttonPatch.Click += new System.EventHandler(this.buttonPatch_Click);
+			// 
+			// checkBoxLogging
+			// 
+			this.checkBoxLogging.AutoSize = true;
+			this.checkBoxLogging.Location = new System.Drawing.Point(561, 12);
+			this.checkBoxLogging.Name = "checkBoxLogging";
+			this.checkBoxLogging.Size = new System.Drawing.Size(96, 17);
+			this.checkBoxLogging.TabIndex = 12;
+			this.checkBoxLogging.Text = "Enable logging";
+			this.checkBoxLogging.UseVisualStyleBackColor = true;
+			this.checkBoxLogging.CheckedChanged += new System.EventHandler(this.checkBoxLogging_CheckedChanged);
 			// 
 			// fileSelectControlMenu
 			// 
@@ -175,6 +187,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(669, 659);
+			this.Controls.Add(this.checkBoxLogging);
 			this.Controls.Add(this.buttonPatch);
 			this.Controls.Add(this.fileSelectControlMenu);
 			this.Controls.Add(this.fileSelectControlElf);
@@ -191,6 +204,7 @@
 			this.Text = "Tales of Vesperia (PS3) Patcher";
 			this.Load += new System.EventHandler(this.PatchForm_Load);
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -208,6 +222,7 @@
 		private System.Windows.Forms.Button buttonPatch;
 		private FileSelectControl fileSelectControlElf;
 		private FileSelectControl fileSelectControlMenu;
+		private System.Windows.Forms.CheckBox checkBoxLogging;
 	}
 }
 
