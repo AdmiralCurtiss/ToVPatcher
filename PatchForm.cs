@@ -51,6 +51,11 @@ namespace ToVPatcher {
 				return;
 			}
 
+			if ( !LoadOutputChecksums() ) {
+				Close();
+				return;
+			}
+
 			string ebootModPath = Path.GetFullPath( "ebootmod/ebootMOD.exe" );
 			if ( !File.Exists( ebootModPath ) ) {
 				MessageBox.Show( this,
@@ -60,8 +65,6 @@ namespace ToVPatcher {
 					"ebootMOD not found!", MessageBoxButtons.OK, MessageBoxIcon.Warning
 				);
 			}
-
-			LoadOutputChecksums();
 
 			fileSelectControlElf.LabelText = "EBOOT.BIN";
 			fileSelectControlElf.FilePath = Path.Combine( Directory.GetCurrentDirectory(), "EBOOT.BIN" );
@@ -143,7 +146,7 @@ namespace ToVPatcher {
 			FileSelectControls.Add( fileSelectControlTrophy );
 		}
 
-		private void LoadOutputChecksums() {
+		private bool LoadOutputChecksums() {
 			string path = "new/patches/checksums.md5";
 			if ( File.Exists( path ) ) {
 				foreach ( string line in File.ReadAllLines( path ) ) {
@@ -151,13 +154,14 @@ namespace ToVPatcher {
 					string filename = line.Substring( 34 );
 					OutputChecksums.Add( filename, md5 );
 				}
+				return true;
 			} else {
 				MessageBox.Show( this,
 					"File containing checksums for the patched files could not be found." + Environment.NewLine +
-					"Please make sure the archive containing the patch files was fully extracted and no files were moved or renamed." + Environment.NewLine +
-					"The patcher will still run, but protection against incorrect patches will not be provided.",
-					"Checksums not found!", MessageBoxButtons.OK, MessageBoxIcon.Warning
+					"Please make sure the archive containing the patch files was fully extracted and no files were moved or renamed.",
+					"Checksums not found!", MessageBoxButtons.OK, MessageBoxIcon.Error
 				);
+				return false;
 			}
 		}
 
