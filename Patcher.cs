@@ -643,6 +643,80 @@ namespace ToVPatcher {
 				Util.DeleteDirectoryAggressive( POR_Cextract, true );
 			}
 
+			// extract yuri towel costume into its own archive
+			{
+				string EP_1320_060 = Path.Combine( extractPath, "EP_1320_060.DAT" );
+				string EP_1320_060decomp = tlzcDecompressToTempFile( EP_1320_060 );
+				string EP_1320_060extract = svoExtractToTempDir( EP_1320_060decomp );
+				{
+					string EP_1320_060e_0002 = Path.Combine( EP_1320_060extract, "0002" );
+					string EP_1320_060e_0002extract = svoExtractToTempDir( EP_1320_060e_0002 );
+					{
+						foreach ( string file in Util.DirectoryGetFilesWorkaround( EP_1320_060e_0002extract ) ) {
+							if ( !file.EndsWith( "4" ) ) { File.Delete( file ); }
+						}
+
+						string EP_1320_060e_0002new = Path.Combine( EP_1320_060extract, "0002.new" );
+						using ( var fps4 = new FPS4() ) {
+							fps4.Alignment = 0x80;
+							fps4.ContentBitmask = 0x0047;
+							fps4.Pack( Util.DirectoryGetFilesWorkaround( EP_1320_060e_0002extract ), EP_1320_060e_0002new, "n" );
+						}
+						File.Delete( EP_1320_060e_0002 );
+						File.Move( EP_1320_060e_0002new, EP_1320_060e_0002 );
+						Util.DeleteDirectoryAggressive( EP_1320_060e_0002extract, true );
+					}
+
+					File.Delete( Path.Combine( EP_1320_060extract, "0001" ) );
+					File.Copy( Path.Combine( EP_1320_060extract, "0003" ), Path.Combine( EP_1320_060extract, "0001" ) );
+
+					string EP_1320_060e_0000 = Path.Combine( EP_1320_060extract, "0000" );
+					string EP_1320_060e_0000extract = Path.Combine( EP_1320_060extract, "0000.ext" );
+					if ( Directory.Exists( EP_1320_060e_0000extract ) ) { Util.DeleteDirectoryAggressive( EP_1320_060e_0000extract, true ); }
+					Directory.CreateDirectory( EP_1320_060e_0000extract );
+					using ( var fps4 = new FPS4( EP_1320_060e_0000 ) ) {
+						fps4.Extract( EP_1320_060e_0000extract );
+					}
+					{
+						foreach ( string dir in Directory.GetDirectories( EP_1320_060e_0000extract ) ) {
+							if ( !Path.GetFileName( dir ).StartsWith( "P" ) ) { Util.DeleteDirectoryAggressive( dir, true ); }
+						}
+						foreach ( string dir in Directory.GetDirectories( Directory.GetDirectories( EP_1320_060e_0000extract ).First() ) ) {
+							string dirname = Path.GetFileName( dir );
+							if ( !( dirname.StartsWith( "Y" ) || dirname.EndsWith( "2" ) ) ) { Util.DeleteDirectoryAggressive( dir, true ); }
+						}
+						foreach ( string dir in Directory.GetDirectories( Directory.GetDirectories( Directory.GetDirectories( EP_1320_060e_0000extract ).First() ).First() ) ) {
+							string dirname = Path.GetFileName( dir );
+							if ( !dir.EndsWith( "M" ) ) { Util.DeleteDirectoryAggressive( dir, true ); }
+						}
+
+						string EP_1320_060e_0000new = Path.Combine( EP_1320_060extract, "0000.new" );
+						using ( var fps4 = new FPS4() ) {
+							fps4.Alignment = 0x80;
+							fps4.ContentBitmask = 0x0047;
+							var files = Util.DirectoryGetFilesWorkaround( EP_1320_060e_0000extract, "*", System.IO.SearchOption.AllDirectories ).OrderBy( x => x.Split( '.' ).Last() ).ToArray();
+							fps4.Pack( files, EP_1320_060e_0000new, "p" );
+						}
+						File.Delete( EP_1320_060e_0000 );
+						File.Move( EP_1320_060e_0000new, EP_1320_060e_0000 );
+						Util.DeleteDirectoryAggressive( EP_1320_060e_0000extract, true );
+					}
+				}
+				string YUR_C201new = Path.Combine( extractPath, "YUR_C201.DAT.dec.new" );
+				using ( var fps4 = new FPS4() ) {
+					fps4.Alignment = 0x80;
+					fps4.ContentBitmask = 0x0007;
+					fps4.ArchiveName = "YUR_C201";
+					fps4.Pack( Util.DirectoryGetFilesWorkaround( EP_1320_060extract ), YUR_C201new );
+				}
+				Util.DeleteDirectoryAggressive( EP_1320_060extract, true );
+
+				tlzcCompress( YUR_C201new, Path.Combine( extractPath, "YUR_C201.DAT" ) );
+
+				File.Delete( EP_1320_060decomp );
+				File.Delete( YUR_C201new );
+			}
+
 			if ( worker != null ) { worker.ReportProgress( 100, "Packing modified file..." ); }
 			Logger.LogDirData( extractPath, "chara dir patched" );
 			using ( var fps4 = new FPS4() ) {
