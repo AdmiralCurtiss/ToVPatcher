@@ -1,0 +1,5 @@
+call "modify-string-for-website.bat"
+call "modify-all-files.bat"
+call "extract-new-scenario-for-website.bat"
+call "extract-new-chat-for-website.bat"
+call "extract-new-btl-for-website.bat"

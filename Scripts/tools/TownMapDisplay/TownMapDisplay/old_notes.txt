@@ -1,0 +1,91 @@
+Offset     Effect
+0x00025104 Filename loaded
+0x00025124 X-Offset of whole thing
+0x00025128 Y-Offset of whole thing
+0x0002512C ??? Nothing noticable
+0x00025130 ???
+0x00025134 ???
+0x00025138 ???
+0x0002513C ??? <-- maybe recheck that later
+0x00025140 something regarding the background color?
+0x00025144 ???
+0x00025148 ???
+0x0002514C ???
+0x00025150 ???
+0x00025154 ??? 
+0x00025158 something
+0x0002515C |regarding
+0x00025160 |background
+0x00025164 |color (combination of those four values gave me a while glow behind the text)
+0x00025168
+0x0002516C
+0x00025170 Length of Vesperian name
+0x00025174 Height of Vesperian name
+0x00025178 X-Offset of Vesperian name
+0x0002517C Y-Offset of Vesperian name
+0x00025180
+0x00025184 Offset of the background image or something?
+0x00025188
+0x0002518C
+0x00025190 ???
+0x00025194
+0x00025198 color of the background image or something?
+0x0002519C color of the background image or something?
+0x000251A0 ???
+0x000251A4 something with the background image
+0x000251A8 Amount of "Tiles" loaded
+0x000251AC not sure
+
+Values for 0x000251A8:
+00 - No Name at all.
+01 - Displays one 48px tile of the "subtitle".
+02 - Two 48px tiles.
+08 - All tiles.
+09 - Same as 08, I assume it "displays" more tiles but since they're full-alpha'd I'm not seeing them.
+10 - Same as 08
+1F - BOTH the English type and the Japanese type layered on top of each other 
+20 - Same as 1F
+
+
+1C99C
+
+54 53 53 00
+00 00 00 20
+00 01 C9 34
+00 01 C9 9C
+00 01 C1 BC
+00 01 C9 7C
+00 00 A8 D2
+00 00 08 00
+
+025104
+  8768
+  
+
+0x1CEFC -> 0x8080 bytes text Display info (total 0x8080 bytes, 0x20 per section)
+Offset     Effect
+0x0001CEFC Time (in frames?) until that part appears
+0x0001CF00 X-Offset in the texture of displayed tile.
+0x0001CF04 Y-Offset in the texture of displayed tile.
+0x0001CF08
+0x0001CF0C
+0x0001CF10
+0x0001CF14
+0x0001CF18 unused?
+
+
+
+
+
+1C99C
+
+!!!! 0x156DC -> pointer to JPN "Imperial Capital: Zaphias" [0x0560 -> 0x1CEFC] 0x3220 bytes till below pointer
+!!!! 0x15710 -> pointer to ENG "Imperial Capital: Zaphias" [0x3780 -> 0x2011C]
+Sadly those are the ONLY TWO POINTERS apparently so fuck, where does it get the rest?
+
+
+85E0 -> 0x24F7C -> Block containing the information of which block to start on when checking for any given area, structure:
+4 bytes Japanese offset
+4 bytes US offset
+where "offset" is amount of blocks to skip starting at the offset set at 0x156DC (JP) or 0x15710 (US), each block being 0x20 bytes, to find the first tile to display for that town.
+
