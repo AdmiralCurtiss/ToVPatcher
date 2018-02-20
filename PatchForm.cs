@@ -24,7 +24,7 @@ namespace ToVPatcher {
 		bool CheckForExecutable( string file ) {
 			if ( !File.Exists( file ) && !File.Exists( file + ".exe" ) ) {
 				MessageBox.Show( this,
-					file + " could not be found at " + Path.GetFullPath( file + ".exe" ) + "." + Environment.NewLine +
+					file + " could not be found at " + Path.GetFullPath( file + Util.exeSuffix ) + "." + Environment.NewLine +
 					"Please make sure the archive containing ToVPatcher was fully extracted and no files were moved or renamed, then run the patcher again.",
 					file + " found!", MessageBoxButtons.OK, MessageBoxIcon.Error
 				);
@@ -46,7 +46,7 @@ namespace ToVPatcher {
 				return;
 			}
 
-			if ( !CheckForExecutable( "comptoe" ) || !CheckForExecutable( "xdelta" ) ) {
+			if ( !CheckForExecutable( "comptoe" ) || ( Util.isRunningOnWindows() && !CheckForExecutable( "xdelta3" ) ) ) {
 				Close();
 				return;
 			}
