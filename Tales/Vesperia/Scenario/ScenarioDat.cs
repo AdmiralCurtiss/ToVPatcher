@@ -9,6 +9,8 @@ namespace HyoutaTools.Tales.Vesperia.Scenario {
 		public uint Offset;
 		public uint FilesizeCompressed;
 		public uint FilesizeUncompressed;
+		public string Filename;
+		public long Length;
 
 		public Stream Data = null;
 
@@ -81,13 +83,15 @@ namespace HyoutaTools.Tales.Vesperia.Scenario {
 
 				// make sure an entry for that file exists
 				for ( int i = Entries.Count; i <= fileNumber; ++i ) { Entries.Add( new ScenarioDatEntry() ); }
-
+				Entries[fileNumber].Filename = f;
 				Entries[fileNumber].Data = new FileStream( f, FileMode.Open );
+				Entries[fileNumber].Length = Entries[fileNumber].Data.Length;
 				Entries[fileNumber].FilesizeCompressed = (uint)Entries[fileNumber].Data.Length;
 
 				Entries[fileNumber].Data.Position = 0x05;
 				Entries[fileNumber].FilesizeUncompressed = Entries[fileNumber].Data.ReadUInt32();
 				Entries[fileNumber].Data.Position = 0;
+				Entries[fileNumber].Data.Close();
 			}
 
 			Filecount = (uint)Entries.Count;
@@ -106,14 +110,19 @@ namespace HyoutaTools.Tales.Vesperia.Scenario {
 			// write files
 			for ( int i = 0; i < Entries.Count; ++i ) {
 				if ( Entries[i].Data != null ) {
+					Entries[i].Data = new FileStream( Entries[i].Filename, FileMode.Open );
 					// special case: if multiple files in a row are identical, only add them once and point the offsets at the same data
 					// oddly enough for the two times it happens in the original files, it only does it once, so no idea what is actually
 					// the proper way to handle it, faking it with that last condition
-					if ( i >= 1 && Entries[i - 1].Data != null && Entries[i - 1].Data.Length == Entries[i].Data.Length && Entries[i].Data.Length > 0x30 ) {
+					if ( i >= 1 && Entries[i - 1].Data != null && Entries[i - 1].Length == Entries[i].Length && Entries[i].Length > 0x30 ) {
+						Entries[i - 1].Data = new FileStream( Entries[i - 1].Filename, FileMode.Open );
 						Entries[i - 1].Data.Position = 0;
 						Entries[i].Data.Position = 0;
+
 						if ( Entries[i - 1].Data.IsIdentical( Entries[i].Data, Entries[i].Data.Length ) ) {
 							Entries[i].Offset = Entries[i - 1].Offset;
+							Entries[i].Data.Close();
+							Entries[i - 1].Data.Close();
 							continue;
 						}
 					}
@@ -122,6 +131,7 @@ namespace HyoutaTools.Tales.Vesperia.Scenario {
 					Entries[i].Data.Position = 0;
 					Util.CopyStream( Entries[i].Data, f, (int)Entries[i].Data.Length );
 					while ( f.Length % align != 0 ) { f.WriteByte( 0 ); }
+					Entries[i].Data.Close();
 				}
 			}
 
