@@ -9,7 +9,11 @@ using System.ComponentModel;
 namespace ToVPatcher {
 	class ElfPatcher {
 		public static void PatchElf( string ebootPath, string patchDir, string outDir, string outMd5 = null, BackgroundWorker worker = null ) {
-			string ebootModPath = Path.GetFullPath( "ebootmod/ebootMOD.exe" );
+			
+			string patcherPath = "eboot_tools/unself";
+			if (Util.isRunningOnWindows()) {
+				patcherPath = Path.GetFullPath ("ebootmod/ebootMOD.exe");
+			}
 			ebootPath = Path.GetFullPath( ebootPath );
 			patchDir = Path.GetFullPath( patchDir );
 			outDir = Path.GetFullPath( outDir );
@@ -22,18 +26,22 @@ namespace ToVPatcher {
 
 			// decrypt
 			if ( worker != null ) { worker.ReportProgress( 0, "Decrypting..." ); }
-			string elfPath = Path.Combine( Path.GetDirectoryName( ebootModPath ), Path.GetFileName( ebootPath ) + "-mod.ELF" );
+			string elfPath = Path.Combine( Path.GetDirectoryName( patcherPath ), Path.GetFileName( ebootPath ) + "-mod.ELF" );
 			int tries = 5;
 			while ( !( File.Exists( elfPath ) && Patcher.CalcMd5( elfPath ) == "a424aa775b707539dbff08cdb2e61ff5" ) ) {
 				if ( --tries < 0 ) {
 					throw new PatchingException( "Could not decrypt EBOOT. Confirm that EBOOT is correctly ripped and ebootMOD is working correctly." );
 				}
 
-				// this is super ugly but the only sensible way since calling unself directly searches the keys who-knows-where
 				try {
-					RunEbootModAndKill( ebootModPath, "\"" + ebootPath + "\"" );
+					if (!Util.isRunningOnWindows()) {
+						Util.RunProgram(patcherPath, "\"" + ebootPath + "\" \"" + elfPath + "\"", false, false);
+					}
+					else {
+						RunEbootModAndKill( patcherPath, "\"" + ebootPath + "\"" );
+					}
 				} catch ( Exception e ) {
-					throw new PatchingException( "Failed during execution of ebootMOD. Make sure you copied _everything_ from the ebootmod archive into the ebootmod folder and try again.", e );
+					throw new PatchingException( "Failed during execution of ebootMOD or unself. Make sure you copied _everything_ from the ebootmod archive into the ebootmod folder and try again.", e );
 				}
 				// sleep a bit to reduce chance of ebootMod still having the file handle
 				System.Threading.Thread.Sleep( 250 );
@@ -49,15 +57,26 @@ namespace ToVPatcher {
 			// encrypt 
 			if ( worker != null ) { worker.ReportProgress( 0, "Encrypting..." ); }
 			string outPath = Path.Combine( outDir, "EBOOT.BIN" );
-			RunEbootMod( ebootModPath, ebootPath, patchedElf, outPath );
-
+			if (!Util.isRunningOnWindows()) {
+				RunElfPatcher (Path.GetFullPath ("PS3Py/fself.py"), ebootPath, patchedElf, outPath);
+			} else {
+				RunElfPatcher (patcherPath, ebootPath, patchedElf, outPath);
+			}
 			File.Delete( patchedElf );
 		}
 
-		private static void RunEbootMod( string ebootMod, string originalEboot, string modifiedElf, string modifiedEboot ) {
+		private static void RunElfPatcher( string ebootMod, string originalEboot, string modifiedElf, string modifiedEboot ) {
+
 			try {
-				if ( !Util.RunProgram( ebootMod, "\"" + originalEboot + "\" \"" + modifiedEboot + "\" \"" + modifiedElf + "\"", false, false, true ) ) {
-					throw new PatchingException( "ebootMOD failed: " + originalEboot + " + " + modifiedElf + " -> " + modifiedEboot );
+				if (!Util.isRunningOnWindows()) {
+					if (!Util.RunProgram( ebootMod, modifiedElf + " " + modifiedEboot, false, false, true )) {
+						throw new PatchingException("fself.py failed");
+					}
+				}
+				else {
+					if ( !Util.RunProgram( ebootMod, "\"" + originalEboot + "\" \"" + modifiedEboot + "\" \"" + modifiedElf + "\"", false, false, true ) ) {
+						throw new PatchingException( "ebootMOD failed: " + originalEboot + " + " + modifiedElf + " -> " + modifiedEboot );
+					}
 				}
 			} catch ( Win32Exception e ) {
 				throw new PatchingException( "Failed during execution of ebootMOD. Make sure ebootMOD can be found at " + ebootMod + " and try again." );

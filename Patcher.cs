@@ -59,7 +59,7 @@ namespace ToVPatcher {
 					throw new PatchingException( "Decompression failed: " + infile );
 				}
 			} catch ( Win32Exception e ) {
-				throw new PatchingException( "Failed during execution of comptoe. Make sure comptoe can be found at " + Path.GetFullPath( "comptoe.exe" ) + " and try again." );
+				throw new PatchingException( "Failed during execution of comptoe. Make sure comptoe can be found at " + Path.GetFullPath( "comptoe" + Util.exeSuffix ) + " and try again." );
 			}
 			Logger.LogFileData( outfile, "comptoe decomp, outfile" );
 		}
@@ -70,7 +70,7 @@ namespace ToVPatcher {
 					throw new PatchingException( "Compression failed: " + infile );
 				}
 			} catch ( Win32Exception e ) {
-				throw new PatchingException( "Failed during execution of comptoe. Make sure comptoe can be found at " + Path.GetFullPath( "comptoe.exe" ) + " and try again." );
+				throw new PatchingException( "Failed during execution of comptoe. Make sure comptoe can be found at " + Path.GetFullPath( "comptoe" + Util.exeSuffix ) + " and try again." );
 			}
 			Logger.LogFileData( outfile, "comptoe comp, outfile" );
 		}
