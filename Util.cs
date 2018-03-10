@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using ToVPatcher;
 
 namespace HyoutaTools {
 	public static class Util {
@@ -493,13 +494,23 @@ namespace HyoutaTools {
 			Directory.Delete( path, true );
 		}
 
-		public static string[] DirectoryGetFilesWorkaround( string dirpath ) {
+		public static string[] DirectoryGetFilesWorkaround( string dirpath, bool logFiles = false ) {
 			string[] files = Directory.GetFiles( dirpath );
-			return FixFrenchLocaleBugMaybe( files );
+			string[] fixedFiles = FixFrenchLocaleBugMaybe( files );
+			if ( logFiles ) {
+				Logger.LogPatching( "Fetching directory '" + dirpath + "', got " + files.Length + " files:" );
+				LogFiles( fixedFiles );
+			}
+			return fixedFiles;
 		}
-		public static string[] DirectoryGetFilesWorkaround( string dirpath, string searchPattern, SearchOption searchOption ) {
+		public static string[] DirectoryGetFilesWorkaround( string dirpath, string searchPattern, SearchOption searchOption, bool logFiles = false ) {
 			string[] files = Directory.GetFiles( dirpath, searchPattern, searchOption );
-			return FixFrenchLocaleBugMaybe( files );
+			string[] fixedFiles = FixFrenchLocaleBugMaybe( files );
+			if ( logFiles ) {
+				Logger.LogPatching( "Fetching directory '" + dirpath + "' with filter, got " + files.Length + " files:" );
+				LogFiles( fixedFiles );
+			}
+			return fixedFiles;
 		}
 		// fixes super weird bug seen on a french windows locale that adds ._ in front of filenames from Directory.GetFiles
 		public static string[] FixFrenchLocaleBugMaybe( string[] files ) {
@@ -515,6 +526,11 @@ namespace HyoutaTools {
 			}
 
 			return files;
+		}
+		public static void LogFiles( string[] files ) {
+			for ( int i = 0; i < files.Length; ++i ) {
+				Logger.LogFileData( files[i] );
+			}
 		}
 
 		/// <summary>

@@ -656,11 +656,12 @@ namespace ToVPatcher {
 							if ( !file.EndsWith( "4" ) ) { File.Delete( file ); }
 						}
 
+						Logger.LogPatching( "Modified archive YUR_C201/0002" );
 						string EP_1320_060e_0002new = Path.Combine( EP_1320_060extract, "0002.new" );
 						using ( var fps4 = new FPS4() ) {
 							fps4.Alignment = 0x80;
 							fps4.ContentBitmask = 0x0047;
-							fps4.Pack( Util.DirectoryGetFilesWorkaround( EP_1320_060e_0002extract ), EP_1320_060e_0002new, "n" );
+							fps4.Pack( Util.DirectoryGetFilesWorkaround( EP_1320_060e_0002extract, logFiles: true ), EP_1320_060e_0002new, "n" );
 						}
 						File.Delete( EP_1320_060e_0002 );
 						File.Move( EP_1320_060e_0002new, EP_1320_060e_0002 );
@@ -690,11 +691,14 @@ namespace ToVPatcher {
 							if ( !dir.EndsWith( "M" ) ) { Util.DeleteDirectoryAggressive( dir, true ); }
 						}
 
+						Logger.LogPatching( "Modified archive YUR_C201/0000" );
 						string EP_1320_060e_0000new = Path.Combine( EP_1320_060extract, "0000.new" );
 						using ( var fps4 = new FPS4() ) {
 							fps4.Alignment = 0x80;
 							fps4.ContentBitmask = 0x0047;
-							var files = Util.DirectoryGetFilesWorkaround( EP_1320_060e_0000extract, "*", System.IO.SearchOption.AllDirectories ).OrderBy( x => x.Split( '.' ).Last() ).ToArray();
+							var files = Util.DirectoryGetFilesWorkaround( EP_1320_060e_0000extract, "*", System.IO.SearchOption.AllDirectories, logFiles: true ).OrderBy( x => x.Split( '.' ).Last() ).ToArray();
+							Logger.LogPatching( "Modified archive YUR_C201/0000 (sorted)" );
+							Util.LogFiles( files );
 							fps4.Pack( files, EP_1320_060e_0000new, "p" );
 						}
 						File.Delete( EP_1320_060e_0000 );
@@ -702,12 +706,13 @@ namespace ToVPatcher {
 						Util.DeleteDirectoryAggressive( EP_1320_060e_0000extract, true );
 					}
 				}
+				Logger.LogPatching( "Modified archive YUR_C201" );
 				string YUR_C201new = Path.Combine( extractPath, "YUR_C201.DAT.dec.new" );
 				using ( var fps4 = new FPS4() ) {
 					fps4.Alignment = 0x80;
 					fps4.ContentBitmask = 0x0007;
 					fps4.ArchiveName = "YUR_C201";
-					fps4.Pack( Util.DirectoryGetFilesWorkaround( EP_1320_060extract ), YUR_C201new );
+					fps4.Pack( Util.DirectoryGetFilesWorkaround( EP_1320_060extract, logFiles: true ), YUR_C201new );
 				}
 				Util.DeleteDirectoryAggressive( EP_1320_060extract, true );
 

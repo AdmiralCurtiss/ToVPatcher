@@ -11,7 +11,11 @@ namespace ToVPatcher {
 		public static void LogError( string error ) {
 			LogAny( "error.log", error );
 		}
-		public static void LogAny( string path, string text ) {
+		public static void LogPatching( string text ) {
+			if ( !LoggingEnabled ) { return; }
+			LogAny( "patching.log", text );
+		}
+		private static void LogAny( string path, string text ) {
 			using ( var file = new System.IO.FileStream( path, System.IO.FileMode.Append ) ) {
 				DateTime now = System.DateTime.UtcNow;
 				string dateTimeString = now.ToShortDateString() + " " + now.ToShortTimeString();
