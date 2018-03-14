@@ -52,6 +52,7 @@
 			// 
 			// checkBoxLogging
 			// 
+			this.checkBoxLogging.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.checkBoxLogging.AutoSize = true;
 			this.checkBoxLogging.Location = new System.Drawing.Point(561, 12);
 			this.checkBoxLogging.Name = "checkBoxLogging";
