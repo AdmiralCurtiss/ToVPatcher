@@ -40,16 +40,16 @@ namespace ToVPatcher {
 		}
 
 		public static void XdeltaApply( string original, string patched, string patch ) {
-			Logger.LogFileData( original, "xdelta, infile" );
-			Logger.LogFileData( patch, "xdelta, patch" );
+			Logger.LogFileData( original, "xdelta3, infile" );
+			Logger.LogFileData( patch, "xdelta3, patch" );
 			try {
-				if ( !Util.RunProgram( "xdelta", "-d -f -s \"" + original + "\" \"" + patch + "\" \"" + patched + "\"", false, false, true ) ) {
+				if ( !Util.RunProgram( "xdelta3", "-d -f -s \"" + original + "\" \"" + patch + "\" \"" + patched + "\"", false, false, true ) ) {
 					throw new PatchingException( "Patching failed: " + patch );
 				}
 			} catch ( Win32Exception e ) {
-				throw new PatchingException( "Failed during execution of xdelta. Make sure xdelta can be found at " + Path.GetFullPath( "xdelta.exe" ) + " and try again." );
+				throw new PatchingException( "Failed during execution of xdelta3. Make sure xdelta can be found at " + Path.GetFullPath( "xdelta3" + Util.exeSuffix ) + " and try again." );
 			}
-			Logger.LogFileData( patched, "xdelta, outfile" );
+			Logger.LogFileData( patched, "xdelta3, outfile" );
 		}
 
 		static void ComptoeDecompress( string infile, string outfile ) {
@@ -59,7 +59,7 @@ namespace ToVPatcher {
 					throw new PatchingException( "Decompression failed: " + infile );
 				}
 			} catch ( Win32Exception e ) {
-				throw new PatchingException( "Failed during execution of comptoe. Make sure comptoe can be found at " + Path.GetFullPath( "comptoe.exe" ) + " and try again." );
+				throw new PatchingException( "Failed during execution of comptoe. Make sure comptoe can be found at " + Path.GetFullPath( "comptoe" + Util.exeSuffix ) + " and try again." );
 			}
 			Logger.LogFileData( outfile, "comptoe decomp, outfile" );
 		}
@@ -70,7 +70,7 @@ namespace ToVPatcher {
 					throw new PatchingException( "Compression failed: " + infile );
 				}
 			} catch ( Win32Exception e ) {
-				throw new PatchingException( "Failed during execution of comptoe. Make sure comptoe can be found at " + Path.GetFullPath( "comptoe.exe" ) + " and try again." );
+				throw new PatchingException( "Failed during execution of comptoe. Make sure comptoe can be found at " + Path.GetFullPath( "comptoe" + Util.exeSuffix ) + " and try again." );
 			}
 			Logger.LogFileData( outfile, "comptoe comp, outfile" );
 		}

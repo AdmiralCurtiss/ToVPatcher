@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ToVPatcher</RootNamespace>
     <AssemblyName>ToVPatcher</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -112,7 +112,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\loading.gif" />
+    <None Include="Resources\loading.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\dialog-clean.png" />

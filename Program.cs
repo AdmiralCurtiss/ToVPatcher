@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
+using HyoutaTools;
+
 namespace ToVPatcher {
 	static class Program {
 		/// <summary>
@@ -10,6 +12,9 @@ namespace ToVPatcher {
 		/// </summary>
 		[STAThread]
 		static void Main( string[] args ) {
+		        if (Util.isRunningOnWindows()) {
+			        Util.exeSuffix = ".exe";
+		        }
 			if ( args.Contains( "--default" ) ) {
 				Patcher.PatchAllDefault();
 			} else {

@@ -26,7 +26,7 @@ Requirements
 To run this patched version of Tales of Vesperia, you will need:
 * A PS3 capable of running homebrew
 * A copy of the Japanese PS3 game disc of Tales of Vesperia
-* A Windows PC to run the patching tool
+* A PC to run the patching tool
 
 
 Installed Data
@@ -72,12 +72,29 @@ Instructions
   Copy all of them next to ToVPatcher.exe
   
   
-* Acquire ebootMOD
+* Acquire ebootMOD (Windows users)
   
   To modify EBOOT.BIN, we need a way to de- and encrypt it. For legal reasons, we cannot provide a tool to do this, so you'll have to find it yourself. Place all files from ebootMOD into the provided empty "ebootmod" folder, so that the executable can be found at ./ebootmod/ebootMOD.exe
   
   I have tested this with the ebootMOD executable last modified on March 31st, 2011, but other versions may work as well.
-  
+
+* Acquire fself and unself (Linux and OS X only)
+
+  The failOverflow tool to decrypt is found [here](https://github.com/eltair/fail0verflow). Create a folder called "eboot\_tools"
+  in the path of the ToVPatcher.exe binary and copy the unself binary there.
+
+  You should acquire the keys for decryption somewhere. They can't be provided with this program due to legal reasons. You should
+  place the keys in a folder called ".ps3" in your home directory.
+
+  fself is required for making a bootable EBOOT.bin. fself can be acquired by cloning 
+  the [following repository](https://github.com/HACKERCHANNEL/PS3Py) in the ToVPatcher.exe path. Be sure to call the folder with fself.py `PS3Py`
+  and make sure to give fself.py execution rights.
+
+* Acquire Comptoe (Linux and OS X only)
+
+  Comptoe is used for the special compression used in some Tales games. Compile it
+  from [here](https://github.com/talestra/talestra/tree/master/compto) and place the comptoe binary in the same directory as the ToVPatcher.exe
+  executable.
   
 * Run ToVPatcher
   
@@ -89,6 +106,10 @@ Instructions
   If you for whatever reason need to interrupt the patching process, just reopen ToVPatcher later and hit the Patch! button again. It will recognize already patched files and just patch the remaining ones.
   
   Before you proceed to the next step, please make sure all files were patched correctly, as indicated by the green checkmarks next to each file in ToVPatcher.
+
+* Run ToVPatcher (Linux and OSX)
+
+  The same Windows instructions apply except that the executable should be run with Mono.
   
   
 * Overwrite the original files with the patched ones

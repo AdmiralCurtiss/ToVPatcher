@@ -24,7 +24,7 @@ namespace ToVPatcher {
 		bool CheckForExecutable( string file ) {
 			if ( !File.Exists( file ) && !File.Exists( file + ".exe" ) ) {
 				MessageBox.Show( this,
-					file + " could not be found at " + Path.GetFullPath( file + ".exe" ) + "." + Environment.NewLine +
+					file + " could not be found at " + Path.GetFullPath( file + Util.exeSuffix ) + "." + Environment.NewLine +
 					"Please make sure the archive containing ToVPatcher was fully extracted and no files were moved or renamed, then run the patcher again.",
 					file + " found!", MessageBoxButtons.OK, MessageBoxIcon.Error
 				);
@@ -46,7 +46,7 @@ namespace ToVPatcher {
 				return;
 			}
 
-			if ( !CheckForExecutable( "comptoe" ) || !CheckForExecutable( "xdelta" ) ) {
+			if ( !CheckForExecutable( "comptoe" ) || ( Util.isRunningOnWindows() && !CheckForExecutable( "xdelta3" ) ) ) {
 				Close();
 				return;
 			}
@@ -57,12 +57,20 @@ namespace ToVPatcher {
 			}
 
 			string ebootModPath = Path.GetFullPath( "ebootmod/ebootMOD.exe" );
-			if ( !File.Exists( ebootModPath ) ) {
-				MessageBox.Show( this,
-					"ebootMOD could not be found at " + ebootModPath + "." + Environment.NewLine +
-					"ebootMOD is required to patch EBOOT.BIN. Please read the readme, find a copy of ebootMOD, and place it at the appropriate location." + Environment.NewLine +
-					"The patcher will still run, but will not be able to patch EBOOT.BIN until you do so.",
+			string fSelfPath = Path.GetFullPath( "PS3Py/fself.py" );
+			string unSelfPath = Path.GetFullPath ("eboot_tools/unself");
+			string warningMessage = "{0} could not be found at {1}" + "." + Environment.NewLine +
+				"{0} is required to patch EBOOT.BIN. Please read the readme, find a copy of {0}, and place it at the appropriate location." + Environment.NewLine +
+			                        "The patcher will still run, but will not be able to patch EBOOT.BIN until you do so.";
+			if (!File.Exists (ebootModPath) && Util.isRunningOnWindows()) {
+				MessageBox.Show (this,
+					String.Format(warningMessage, "ebootMOD", ebootModPath),
 					"ebootMOD not found!", MessageBoxButtons.OK, MessageBoxIcon.Warning
+				);
+			} else if ( (!File.Exists (fSelfPath) || !File.Exists (unSelfPath) ) && !Util.isRunningOnWindows()) {
+				MessageBox.Show (this,
+					String.Format(warningMessage, "fself and unself", fSelfPath + " and " + unSelfPath),
+					"fself and unself not found!", MessageBoxButtons.OK, MessageBoxIcon.Warning
 				);
 			}
 
